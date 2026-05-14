@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GA2 Logistics Tool</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c0c;
+      --surface: #141414;
+      --surface2: #1a1a1a;
+      --border: #242424;
+      --border2: #2e2e2e;
+      --text: #f0ede8;
+      --muted: #666;
+      --muted2: #444;
+      --gold: #C8A96E;
+      --teal: #7EB8A4;
+      --violet: #9B8EC4;
+      --coral: #D4736B;
+      --step0: #C8A96E;
+      --step1: #7EB8A4;
+      --step2: #9B8EC4;
+      --step3: #D4736B;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+
+    /* HEADER */
+    .header {
+      max-width: 680px;
+      margin: 0 auto 36px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo-mark {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--gold), var(--violet));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(200,169,110,0.25);
+    }
+    .header-text h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .header-text p {
+      font-size: 11px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 2px;
+      margin-top: 2px;
+    }
+
+    /* STEP NAV */
+    .step-nav {
+      max-width: 680px;
+      margin: 0 auto 14px;
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .step-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .step-btn:hover { border-color: #444; color: #aaa; }
+    .step-btn.active { background: var(--surface); font-weight: 600; }
+    .step-btn.done { color: #888; border-color: var(--border2); }
+    .step-btn.done .step-check { color: var(--teal); }
+    .step-icon { font-size: 15px; }
+    .step-check { font-size: 11px; margin-left: 2px; }
+
+    /* PROGRESS BAR */
+    .progress-track {
+      max-width: 680px; margin: 0 auto 28px;
+      height: 3px; background: #1a1a1a; border-radius: 2px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 2px;
+      transition: width 0.4s ease, background 0.3s ease;
+    }
+
+    /* CARD */
+    .card {
+      max-width: 680px; margin: 0 auto 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 30px 28px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .card.fade { opacity: 0; transform: translateY(8px); }
+
+    /* SECTION TITLE */
+    .section-title {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 6px;
+    }
+    .section-title .s-icon { font-size: 22px; }
+    .section-title h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; font-weight: 700; color: var(--text);
+    }
+    .section-sub {
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 24px; padding-left: 32px;
+      line-height: 1.5;
+    }
+
+    /* FIELDS */
+    .field-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px;
+    }
+    .field { margin-bottom: 18px; }
+    .field.wide { grid-column: 1 / -1; }
+    label.field-label {
+      display: block; font-size: 11px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1.2px;
+      margin-bottom: 7px; font-weight: 500;
+    }
+    input[type="text"], input[type="date"], input[type="time"],
+    input[type="email"], input[type="tel"], select, textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 9px;
+      padding: 11px 13px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #555;
+    }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 80px; }
+    option { background: #1a1a1a; }
+
+    /* RADIO / CHECKBOX PILLS */
+    .pill-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+    .pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      border: 1px solid var(--border2);
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 14px; color: #aaa;
+      transition: all 0.2s;
+      user-select: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .pill input { display: none; }
+    .pill:hover { border-color: #444; color: #ccc; }
+    .pill.selected { font-weight: 600; }
+
+    /* INFO BOX */
+    .info-box {
+      margin-top: 18px; padding: 14px 16px;
+      background: #181300;
+      border: 1px solid #3a2e00;
+      border-radius: 10px;
+      font-size: 13px; color: #bba060; line-height: 1.6;
+    }
+    .info-box strong { color: var(--gold); }
+
+    /* CHECKLIST */
+    .progress-ring-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 18px;
+      background: var(--surface2);
+      border-radius: 12px; margin-bottom: 22px;
+    }
+    .ring-wrap { position: relative; flex-shrink: 0; width: 80px; height: 80px; }
+    .ring-wrap svg { width: 80px; height: 80px; }
+    .ring-text {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 700; color: var(--text);
+    }
+    .ring-info h3 { font-size: 17px; font-weight: 600; color: var(--text); }
+    .ring-info p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+    .checklist { display: flex; flex-direction: column; gap: 10px; }
+    .check-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 13px 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .check-item:hover { border-color: #3a3a3a; }
+    .check-item.checked { background: #160f0e; border-color: #4a2520; }
+    .check-box {
+      width: 24px; height: 24px; border-radius: 7px;
+      border: 2px solid #3a3a3a;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.2s; font-size: 13px;
+    }
+    .check-item.checked .check-box { background: var(--coral); border-color: var(--coral); color: #fff; }
+    .check-item span { font-size: 14px; color: #aaa; transition: color 0.2s; }
+    .check-item.checked span { color: var(--text); }
+
+    /* NAV BUTTONS */
+    .nav-row {
+      display: flex; align-items: center;
+      margin-top: 28px; padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-back {
+      background: transparent; border: 1px solid var(--border2);
+      border-radius: 9px; color: var(--muted);
+      padding: 11px 20px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      transition: all 0.2s;
+    }
+    .btn-back:hover { border-color: #555; color: #aaa; }
+    .btn-next {
+      margin-left: auto;
+      border: none; border-radius: 9px; color: #fff;
+      padding: 11px 26px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 600;
+      letter-spacing: 0.3px; transition: opacity 0.2s;
+    }
+    .btn-next:hover { opacity: 0.85; }
+    .btn-next:disabled { background: #333 !important; cursor: not-allowed; opacity: 1; }
+
+    /* SUBMITTED */
+    .submitted-card {
+      max-width: 680px; margin: 60px auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px; padding: 48px 32px;
+      text-align: center;
+    }
+    .submitted-icon {
+      font-size: 52px; margin-bottom: 18px;
+      background: linear-gradient(135deg, var(--gold), var(--coral));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .submitted-card h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px; color: var(--text); margin-bottom: 10px;
+    }
+    .submitted-card p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 30px; }
+    .summary-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px; margin-bottom: 30px; text-align: left;
+    }
+    .summary-item {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 11px; padding: 13px 15px;
+    }
+    .summary-item .s-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .summary-item .s-value { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 4px; }
+    .btn-reset {
+      background: transparent; border: 1px solid var(--border2);
+      border-radius: 9px; color: var(--muted);
+      padding: 11px 28px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      transition: all 0.2s;
+    }
+    .btn-reset:hover { border-color: #555; color: #aaa; }
+
+    .footer-note {
+      max-width: 680px; margin: 10px auto 0;
+      text-align: center; font-size: 11px; color: var(--muted2);
+    }
+
+    /* HIDDEN STEPS */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    @media (max-width: 520px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .field.wide { grid-column: 1; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .card { padding: 22px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-mark">✦</div>
+  <div class="header-text">
+    <h1>GA2 Logistics Tool</h1>
+    <p>Event Workflow Intake &amp; Coordination</p>
+  </div>
+</div>
+
+<!-- STEP NAV -->
+<div class="step-nav" id="stepNav"></div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-track">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<!-- MAIN CARD -->
+<div class="card" id="mainCard">
+
+  <!-- STEP 0: Event Details -->
+  <div class="step-panel active" id="panel-0">
+    <div class="section-title">
+      <span class="s-icon" style="color:var(--gold)">◈</span>
+      <h2>Event Details</h2>
+    </div>
+    <p class="section-sub">Define the event type and purpose so communications can be routed correctly.</p>
+    <div class="field-grid">
+      <div class="field">
+        <label class="field-label">Event Type *</label>
+        <select id="eventType" onchange="updateCommsNote()">
+          <option value="">Select type...</option>
+          <option>Fundraising</option>
+          <option>Donor Recognition / Thank-You</option>
+          <option>Engagement</option>
+          <option>Stewardship</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Event Purpose *</label>
+        <select id="eventPurpose" onchange="updateCommsNote()">
+          <option value="">Select purpose...</option>
+          <option>Encourage Giving</option>
+          <option>Say Thank You</option>
+          <option>Cultivate Relationship</option>
+          <option>Recognition</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Event Date *</label>
+        <input type="date" id="eventDate"/>
+      </div>
+      <div class="field">
+        <label class="field-label">Event Time</label>
+        <input type="time" id="eventTime"/>
+      </div>
+    </div>
+    <div class="info-box" id="commsNote" style="display:none">
+      <strong>→ Comms note: </strong><span id="commsNoteText"></span>
+    </div>
+  </div>
+
+  <!-- STEP 1: Host & Location -->
+  <div class="step-panel" id="panel-1">
+    <div class="section-title">
+      <span class="s-icon" style="color:var(--teal)">⌖</span>
+      <h2>Host &amp; Location</h2>
+    </div>
+    <p class="section-sub">Capture where the event is being held and who the primary contact is.</p>
+    <div class="field">
+      <label class="field-label">Location Type *</label>
+      <div class="pill-group">
+        <label class="pill" id="pill-campus" onclick="setLocation('on-campus')">
+          <input type="radio" name="locationType" value="on-campus"/> On-Campus (In-House)
+        </label>
+        <label class="pill" id="pill-external" onclick="setLocation('external')">
+          <input type="radio" name="locationType" value="external"/> External (Donor-Hosted)
+        </label>
+      </div>
+    </div>
+    <div id="externalFields" style="display:none">
+      <div class="field-grid">
+        <div class="field">
+          <label class="field-label">Donor / Host Name</label>
+          <input type="text" id="donorName" placeholder="e.g. John Smith"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Host Address</label>
+          <input type="text" id="hostAddress" placeholder="Full address"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Contact Person</label>
+          <input type="text" id="contactName" placeholder="Name"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Contact Phone</label>
+          <input type="tel" id="contactPhone" placeholder="Phone number"/>
+        </div>
+        <div class="field wide">
+          <label class="field-label">Contact Email</label>
+          <input type="email" id="contactEmail" placeholder="email@example.com"/>
+        </div>
+      </div>
+    </div>
+    <div id="campusFields" style="display:none">
+      <div class="field-grid">
+        <div class="field">
+          <label class="field-label">Campus Room / Venue</label>
+          <input type="text" id="campusRoom" placeholder="e.g. Conference Room B"/>
+        </div>
+        <div class="field wide">
+          <label class="field-label">Available Resources / Equipment</label>
+          <textarea id="campusResources" placeholder="List tables, chairs, AV, etc. already on campus..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Logistics -->
+  <div class="step-panel" id="panel-2">
+    <div class="section-title">
+      <span class="s-icon" style="color:var(--violet)">⚙</span>
+      <h2>Logistics</h2>
+    </div>
+    <p class="section-sub">Determine the request type and what services are needed for this event.</p>
+    <div class="field">
+      <label class="field-label">Request Type *</label>
+      <div class="pill-group">
+        <label class="pill" id="pill-workorder" onclick="setRequest('work-order')">
+          <input type="radio" name="requestType" value="work-order"/> Work Order
+        </label>
+        <label class="pill" id="pill-activities" onclick="setRequest('activities-request')">
+          <input type="radio" name="requestType" value="activities-request"/> Activities Request
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Services Needed</label>
+      <div class="pill-group">
+        <label class="pill" id="pill-catering" onclick="toggleService('catering')">
+          <input type="checkbox" id="svc-catering"/> Catering
+        </label>
+        <label class="pill" id="pill-equipment" onclick="toggleService('equipment')">
+          <input type="checkbox" id="svc-equipment"/> Equipment / AV
+        </label>
+      </div>
+    </div>
+    <div class="field-grid">
+      <div class="field wide">
+        <label class="field-label">Special Services / Notes</label>
+        <textarea id="specialServices" placeholder="Any additional service requirements..."></textarea>
+      </div>
+      <div class="field wide">
+        <label class="field-label">Layout Notes</label>
+        <textarea id="layoutNotes" placeholder="Describe layout or reference an existing layout file..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Checklist -->
+  <div class="step-panel" id="panel-3">
+    <div class="section-title">
+      <span class="s-icon" style="color:var(--coral)">✓</span>
+      <h2>Event Checklist</h2>
+    </div>
+    <p class="section-sub">Mark each item as completed. The event proceeds once all required items are confirmed.</p>
+
+    <div class="progress-ring-row">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="32" fill="none" stroke="#222" stroke-width="6"/>
+          <circle id="ringCircle" cx="40" cy="40" r="32" fill="none"
+            stroke="var(--coral)" stroke-width="6"
+            stroke-dasharray="0 201" stroke-linecap="round"
+            transform="rotate(-90 40 40)"/>
+        </svg>
+        <div class="ring-text" id="ringText">0/7</div>
+      </div>
+      <div class="ring-info">
+        <h3 id="ringTitle">7 items remaining</h3>
+        <p id="ringSubtitle">Complete all items before submitting.</p>
+      </div>
+    </div>
+
+    <div class="checklist" id="checklist">
+      <div class="check-item" onclick="toggleCheck(this)" data-key="inviteCreated">
+        <div class="check-box"></div>
+        <span>Event invite created</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)" data-key="commNotified">
+        <div class="check-box"></div>
+        <span>Communications team notified</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)" data-key="hostConfirmed">
+        <div class="check-box"></div>
+        <span>Host / location details confirmed</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)" data-key="layoutConfirmed">
+        <div class="check-box"></div>
+        <span>Room layout confirmed</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)" data-key="cateringRequested">
+        <div class="check-box"></div>
+        <span>Catering request submitted</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)" data-key="workOrderFiled">
+        <div class="check-box"></div>
+        <span>Work order / activities request filed</span>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)" data-key="teamInfoComplete">
+        <div class="check-box"></div>
+        <span>All team &amp; donor info collected</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-row">
+    <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">← Back</button>
+    <button class="btn-next" id="btnNext" onclick="goNext()">Continue →</button>
+  </div>
+</div>
+
+<!-- SUBMITTED VIEW -->
+<div id="submittedView" style="display:none">
+  <div class="submitted-card">
+    <div class="submitted-icon">✦</div>
+    <h2>Event Record Started</h2>
+    <p>Your event logistics workflow has been initiated.<br>The communications team will be notified and logistics routing will begin.</p>
+    <div class="summary-grid" id="summaryGrid"></div>
+    <button class="btn-reset" onclick="resetForm()">Start New Event</button>
+  </div>
+</div>
+
+<p class="footer-note">Fields marked * are required to route to communications &amp; logistics teams.</p>
+
+<script>
+  const STEPS = [
+    { label: "Event Details",   icon: "◈", color: "var(--gold)" },
+    { label: "Host & Location", icon: "⌖", color: "var(--teal)" },
+    { label: "Logistics",       icon: "⚙", color: "var(--violet)" },
+    { label: "Checklist",       icon: "✓", color: "var(--coral)" },
+  ];
+
+  let currentStep = 0;
+  let locationType = "";
+  let requestType = "";
+  let services = { catering: false, equipment: false };
+  let checks = {
+    inviteCreated: false, commNotified: false, hostConfirmed: false,
+    layoutConfirmed: false, cateringRequested: false, workOrderFiled: false, teamInfoComplete: false
+  };
+
+  // BUILD STEP NAV
+  function buildNav() {
+    const nav = document.getElementById('stepNav');
+    nav.innerHTML = '';
+    STEPS.forEach((s, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'step-btn' + (i === currentStep ? ' active' : '') + (i < currentStep ? ' done' : '');
+      btn.style.borderColor = i === currentStep ? s.color : '';
+      btn.style.color = i === currentStep ? s.color : '';
+      btn.innerHTML = `<span class="step-icon" style="color:${i === currentStep ? s.color : i < currentStep ? '#888' : '#555'}">${s.icon}</span>
+        <span>${s.label}</span>${i < currentStep ? '<span class="step-check">✓</span>' : ''}`;
+      btn.onclick = () => goTo(i);
+      nav.appendChild(btn);
+    });
+  }
+
+  function updateProgress() {
+    const fill = document.getElementById('progressFill');
+    const colors = ['var(--gold)', 'var(--teal)', 'var(--violet)', 'var(--coral)'];
+    fill.style.width = `${((currentStep + 1) / STEPS.length) * 100}%`;
+    fill.style.background = colors[currentStep];
+  }
+
+  function updateNav() {
+    const back = document.getElementById('btnBack');
+    const next = document.getElementById('btnNext');
+    back.style.display = currentStep > 0 ? 'block' : 'none';
+    const colors = ['var(--gold)', 'var(--teal)', 'var(--violet)', 'var(--coral)'];
+    if (currentStep < STEPS.length - 1) {
+      next.textContent = 'Continue →';
+      next.style.background = colors[currentStep];
+      next.disabled = false;
+    } else {
+      const done = Object.values(checks).every(Boolean);
+      next.textContent = 'Submit Event Record ✦';
+      next.style.background = done ? 'var(--coral)' : '';
+      next.disabled = !done;
+    }
+  }
+
+  function goTo(i) {
+    const card = document.getElementById('mainCard');
+    card.classList.add('fade');
+    setTimeout(() => {
+      document.getElementById(`panel-${currentStep}`).classList.remove('active');
+      currentStep = i;
+      document.getElementById(`panel-${currentStep}`).classList.add('active');
+      buildNav(); updateProgress(); updateNav();
+      card.classList.remove('fade');
+    }, 180);
+  }
+
+  function goNext() {
+    if (currentStep < STEPS.length - 1) goTo(currentStep + 1);
+    else submitForm();
+  }
+
+  function goBack() {
+    if (currentStep > 0) goTo(currentStep - 1);
+  }
+
+  // COMMS NOTE
+  function updateCommsNote() {
+    const type = document.getElementById('eventType').value;
+    const purpose = document.getElementById('eventPurpose').value;
+    const box = document.getElementById('commsNote');
+    const txt = document.getElementById('commsNoteText');
+    if (type && purpose) {
+      txt.textContent = `This is a ${type} event to ${purpose.toLowerCase()}. The communications team should begin drafting the invite and messaging.`;
+      box.style.display = 'block';
+    } else { box.style.display = 'none'; }
+  }
+
+  // LOCATION TYPE
+  function setLocation(val) {
+    locationType = val;
+    document.getElementById('pill-campus').classList.toggle('selected', val === 'on-campus');
+    document.getElementById('pill-external').classList.toggle('selected', val === 'external');
+    document.getElementById('pill-campus').style.borderColor = val === 'on-campus' ? 'var(--teal)' : '';
+    document.getElementById('pill-campus').style.color = val === 'on-campus' ? 'var(--teal)' : '';
+    document.getElementById('pill-external').style.borderColor = val === 'external' ? 'var(--teal)' : '';
+    document.getElementById('pill-external').style.color = val === 'external' ? 'var(--teal)' : '';
+    document.getElementById('campusFields').style.display = val === 'on-campus' ? 'block' : 'none';
+    document.getElementById('externalFields').style.display = val === 'external' ? 'block' : 'none';
+  }
+
+  // REQUEST TYPE
+  function setRequest(val) {
+    requestType = val;
+    ['work-order', 'activities-request'].forEach(v => {
+      const id = v === 'work-order' ? 'pill-workorder' : 'pill-activities';
+      document.getElementById(id).classList.toggle('selected', val === v);
+      document.getElementById(id).style.borderColor = val === v ? 'var(--violet)' : '';
+      document.getElementById(id).style.color = val === v ? 'var(--violet)' : '';
+    });
+  }
+
+  // SERVICES
+  function toggleService(svc) {
+    services[svc] = !services[svc];
+    const id = svc === 'catering' ? 'pill-catering' : 'pill-equipment';
+    document.getElementById(id).classList.toggle('selected', services[svc]);
+    document.getElementById(id).style.borderColor = services[svc] ? 'var(--violet)' : '';
+    document.getElementById(id).style.color = services[svc] ? 'var(--violet)' : '';
+  }
+
+  // CHECKLIST
+  function toggleCheck(el) {
+    const key = el.dataset.key;
+    checks[key] = !checks[key];
+    el.classList.toggle('checked', checks[key]);
+    el.querySelector('.check-box').textContent = checks[key] ? '✓' : '';
+    updateRing();
+    updateNav();
+  }
+
+  function updateRing() {
+    const done = Object.values(checks).filter(Boolean).length;
+    const total = Object.keys(checks).length;
+    const circ = 2 * Math.PI * 32;
+    const fill = (done / total) * circ;
+    document.getElementById('ringCircle').setAttribute('stroke-dasharray', `${fill} ${circ}`);
+    document.getElementById('ringText').textContent = `${done}/${total}`;
+    document.getElementById('ringTitle').textContent =
+      done === total ? 'All items complete!' : `${total - done} item(s) remaining`;
+    document.getElementById('ringSubtitle').textContent =
+      done === total ? 'Ready to submit.' : 'Complete all items before submitting.';
+  }
+
+  // SUBMIT
+  function submitForm() {
+    const grid = document.getElementById('summaryGrid');
+    const items = [
+      ['Event Type', document.getElementById('eventType').value || '—'],
+      ['Purpose', document.getElementById('eventPurpose').value || '—'],
+      ['Date', document.getElementById('eventDate').value || '—'],
+      ['Location', locationType === 'external' ? 'External / Donor-Hosted' : locationType === 'on-campus' ? 'On-Campus' : '—'],
+      ['Request Type', requestType || '—'],
+      ['Checklist', `${Object.values(checks).filter(Boolean).length} / ${Object.keys(checks).length} complete`],
+    ];
+    grid.innerHTML = items.map(([l, v]) =>
+      `<div class="summary-item"><div class="s-label">${l}</div><div class="s-value">${v}</div></div>`
+    ).join('');
+    document.getElementById('mainCard').style.display = 'none';
+    document.getElementById('submittedView').style.display = 'block';
+    document.getElementById('stepNav').style.display = 'none';
+    document.querySelector('.progress-track').style.display = 'none';
+  }
+
+  function resetForm() {
+    location.reload();
+  }
+
+  // INIT
+  buildNav();
+  updateProgress();
+  updateNav();
+</script>
+</body>
+</html>

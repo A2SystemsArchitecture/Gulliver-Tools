@@ -1,659 +1,901 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GA2 Logistics Tool | A2 Systems Architecture</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GA2 Event Platform | A2 Systems Architecture</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --plum:#2D1B4E;--plum-mid:#3d2660;--plum-light:#4a2f75;
+  --gold:#CA8A04;--gold-light:#e6a805;
+  --cream:#FFFBEB;--lavender:#FAF5FF;
+  --nearblack:#1C1917;--white:#fff;
+  --muted:#6b6560;--border:#e2d9f3;--border2:#d4c9ee;
+  --green:#166534;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+  --red:#991b1b;--red-bg:#fef2f2;--red-border:#fecaca;
+  --amber:#92400e;--amber-bg:#fffbeb;--amber-border:#fde68a;
+}
+body{background:var(--cream);color:var(--nearblack);font-family:Arial,sans-serif;min-height:100vh;padding:0 0 60px;}
 
-    :root {
-      --plum:       #2D1B4E;
-      --plum-dark:  #1e1036;
-      --plum-mid:   #3d2660;
-      --gold:       #CA8A04;
-      --cream:      #FFFBEB;
-      --lavender:   #FAF5FF;
-      --nearblack:  #1C1917;
-      --white:      #ffffff;
-      --muted:      #6b6560;
-      --border:     #e2d9f3;
-      --border2:    #d4c9ee;
-    }
+/* TOP BAR */
+.top-bar{background:var(--plum);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid var(--gold);position:sticky;top:0;z-index:100;}
+.top-bar-left{display:flex;align-items:center;gap:12px;}
+.firm-badge{background:var(--gold);color:var(--plum);font-size:12px;font-weight:700;padding:5px 12px;letter-spacing:.5px;}
+.firm-name{color:var(--white);font-size:14px;font-weight:700;}
+.tool-label{color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+.top-bar-right{color:rgba(255,255,255,.5);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;}
 
-    body {
-      background: var(--cream);
-      color: var(--nearblack);
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
-      padding: 0 0 80px;
-    }
+/* PAGE */
+.page{max-width:900px;margin:0 auto;padding:32px 20px;}
 
-    .top-bar {
-      background: var(--plum);
-      padding: 18px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 4px solid var(--gold);
-    }
-    .top-bar-left { display: flex; align-items: center; gap: 14px; }
-    .firm-badge {
-      background: var(--gold);
-      color: var(--plum);
-      font-size: 13px; font-weight: 700;
-      padding: 6px 14px; letter-spacing: 0.5px;
-    }
-    .firm-name { color: var(--white); font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
-    .tool-label { color: var(--gold); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
-    .top-bar-right { color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+/* ALERT BANNER */
+.alert-banner{display:none;padding:14px 18px;margin-bottom:24px;border-left:4px solid;font-size:13px;font-weight:700;}
+.alert-banner.amber{background:var(--amber-bg);border-color:var(--gold);color:var(--amber);}
+.alert-banner.green{background:var(--green-bg);border-color:#16a34a;color:var(--green);}
 
-    .page { max-width: 760px; margin: 0 auto; padding: 40px 20px; }
+/* TAB NAV */
+.tab-nav{display:flex;border-bottom:2px solid var(--gold);margin-bottom:28px;overflow-x:auto;}
+.tab-btn{padding:12px 22px;background:transparent;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;color:var(--muted);cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;transition:all .2s;}
+.tab-btn:hover{color:var(--plum);}
+.tab-btn.active{color:var(--plum);border-bottom-color:var(--plum);background:var(--lavender);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
 
-    .page-title-block { margin-bottom: 32px; padding-bottom: 20px; border-bottom: 2px solid var(--gold); }
-    .page-title-block h1 { font-size: 26px; font-weight: 700; color: var(--plum); letter-spacing: -0.3px; }
-    .page-title-block p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+/* SECTION CARDS */
+.section-card{background:var(--white);border:1px solid var(--border);border-top:3px solid var(--plum);margin-bottom:20px;}
+.section-head{background:var(--plum);padding:12px 20px;display:flex;align-items:center;gap:10px;}
+.section-head h3{color:var(--white);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+.s-num{background:var(--gold);color:var(--plum);width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.section-body{padding:20px;}
+.section-sub{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.5;}
 
-    .step-nav { display: flex; gap: 0; margin-bottom: 28px; border: 1px solid var(--border2); overflow: hidden; }
-    .step-btn {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
-      padding: 12px 8px; background: var(--white);
-      border: none; border-right: 1px solid var(--border2);
-      color: var(--muted); cursor: pointer;
-      font-family: Arial, sans-serif; font-size: 12px; font-weight: 400;
-      transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.8px;
-    }
-    .step-btn:last-child { border-right: none; }
-    .step-btn:hover { background: var(--lavender); }
-    .step-btn.active { background: var(--plum); color: var(--white); font-weight: 700; }
-    .step-btn.done { background: var(--lavender); color: var(--plum); font-weight: 700; }
-    .step-num {
-      width: 20px; height: 20px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; flex-shrink: 0;
-    }
-    .step-btn.active .step-num { background: var(--gold); color: var(--plum); }
-    .step-btn.done .step-num { background: var(--gold); color: var(--plum); }
-    .step-btn:not(.active):not(.done) .step-num { background: var(--border); color: var(--muted); }
+/* FIELDS */
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;}
+.field-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 16px;}
+.field{margin-bottom:16px;}
+.field.wide{grid-column:1/-1;}
+.field.full{grid-column:1/-1;}
+label.fl{display:block;font-size:10px;color:var(--plum);font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px;}
+input[type=text],input[type=date],input[type=time],input[type=email],input[type=tel],input[type=number],input[type=url],select,textarea{
+  width:100%;background:var(--cream);border:1px solid var(--border2);border-radius:0;
+  padding:9px 11px;color:var(--nearblack);font-family:Arial,sans-serif;font-size:13px;
+  outline:none;transition:border-color .2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--plum);background:var(--lavender);}
+textarea{resize:vertical;min-height:70px;}
+select{cursor:pointer;}
 
-    .progress-track { height: 4px; background: var(--border); margin-bottom: 28px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; }
+.gold-rule{height:2px;background:var(--gold);margin:18px 0;}
+.label-col{background:var(--plum);color:var(--white);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:6px 10px;display:inline-block;margin-bottom:12px;}
 
-    .card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-top: 4px solid var(--plum);
-      padding: 0 0 28px;
-      margin-bottom: 16px;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .card.fade { opacity: 0; transform: translateY(6px); }
-    .card-body { padding: 0 28px; }
+/* CHECKLIST TABLE */
+.check-table{width:100%;border-collapse:collapse;font-size:12px;}
+.check-table th{background:var(--plum);color:var(--white);padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.8px;font-weight:700;}
+.check-table td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.check-table tr:nth-child(even) td{background:var(--lavender);}
+.check-table tr:hover td{background:var(--cream);}
+.check-table select,.check-table input[type=text],.check-table input[type=date]{padding:5px 8px;font-size:12px;}
+.status-badge{display:inline-block;padding:2px 8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.status-badge.todo{background:#f3f4f6;color:#6b7280;}
+.status-badge.inprog{background:var(--amber-bg);color:var(--amber);}
+.status-badge.done{background:var(--green-bg);color:var(--green);}
+.owner-label{font-size:10px;color:var(--muted);font-style:italic;}
 
-    .section-header {
-      background: var(--plum); padding: 16px 24px;
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 28px;
-    }
-    .section-header h2 { color: var(--white); font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-    .section-header .s-num {
-      background: var(--gold); color: var(--plum);
-      width: 26px; height: 26px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; flex-shrink: 0;
-    }
-    .section-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+/* PEOPLE ENTRIES */
+.person-entry{background:var(--lavender);border:1px solid var(--border);padding:14px;margin-bottom:10px;position:relative;}
+.person-entry .remove-btn{position:absolute;top:10px;right:10px;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;}
+.person-entry .remove-btn:hover{color:#991b1b;}
+.add-btn{background:transparent;border:1px solid var(--plum);color:var(--plum);padding:8px 16px;cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;transition:all .2s;margin-top:6px;}
+.add-btn:hover{background:var(--plum);color:var(--white);}
 
-    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
-    .field { margin-bottom: 20px; }
-    .field.wide { grid-column: 1 / -1; }
-    label.field-label {
-      display: block; font-size: 11px; color: var(--plum);
-      font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1.2px; margin-bottom: 6px;
-    }
-    input[type="text"], input[type="date"], input[type="time"],
-    input[type="email"], input[type="tel"], select, textarea {
-      width: 100%; background: var(--cream);
-      border: 1px solid var(--border2); border-radius: 0;
-      padding: 10px 12px; color: var(--nearblack);
-      font-family: Arial, sans-serif; font-size: 14px;
-      outline: none; transition: border-color 0.2s; appearance: none;
-    }
-    input:focus, select:focus, textarea:focus { border-color: var(--plum); background: var(--lavender); }
-    select { cursor: pointer; }
-    textarea { resize: vertical; min-height: 80px; }
+/* GENERATE TAB */
+.generate-hero{background:var(--plum);padding:32px;text-align:center;margin-bottom:24px;}
+.generate-hero h2{color:var(--white);font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.generate-hero p{color:rgba(255,255,255,.7);font-size:13px;line-height:1.6;}
+.readiness-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.readiness-card{background:var(--white);border:1px solid var(--border);padding:16px;text-align:center;}
+.readiness-card .r-icon{font-size:22px;margin-bottom:6px;}
+.readiness-card .r-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;}
+.readiness-card .r-val{font-size:18px;font-weight:700;color:var(--plum);margin-top:4px;}
+.gen-btn{display:block;width:100%;background:var(--gold);border:none;color:var(--plum);padding:16px;cursor:pointer;font-family:Arial,sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:background .2s;margin-bottom:12px;}
+.gen-btn:hover{background:var(--gold-light);}
+.gen-btn:disabled{background:var(--border2);color:var(--muted);cursor:not-allowed;}
+.gen-note{font-size:12px;color:var(--muted);text-align:center;line-height:1.5;}
 
-    .gold-rule { height: 2px; background: var(--gold); margin: 24px 0; }
+/* BRIEFING OUTPUT */
+#briefingOutput{display:none;}
+.briefing-doc{background:var(--white);border:1px solid var(--border);border-top:4px solid var(--plum);padding:40px;}
+.brief-header{border-bottom:3px solid var(--gold);padding-bottom:18px;margin-bottom:24px;}
+.brief-header .bh-label{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:6px;}
+.brief-header h1{font-size:24px;font-weight:700;color:var(--plum);}
+.brief-header .bh-meta{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.8;}
+.brief-section{margin-bottom:24px;}
+.brief-section-title{background:var(--plum);color:var(--white);padding:8px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.brief-section-body{font-size:13px;color:var(--nearblack);line-height:1.8;padding:0 4px;}
+.brief-section-body p{margin-bottom:6px;}
+.brief-section-body ul{padding-left:18px;}
+.brief-section-body ul li{margin-bottom:4px;}
+.brief-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.brief-link{color:var(--plum);font-weight:700;text-decoration:none;}
+.brief-link:hover{text-decoration:underline;}
+.brief-footer{margin-top:32px;padding-top:16px;border-top:2px solid var(--gold);display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
+.print-bar{background:var(--lavender);border:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.print-bar span{font-size:12px;color:var(--plum);font-weight:700;}
+.print-btn{background:var(--plum);border:none;color:var(--white);padding:9px 20px;cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;transition:background .2s;}
+.print-btn:hover{background:var(--plum-mid);}
 
-    .label-col {
-      background: var(--plum); color: var(--white);
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1px; padding: 7px 12px;
-      margin-bottom: 14px; display: inline-block;
-    }
+/* FOOTER */
+.site-footer{background:var(--plum);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;margin-top:40px;}
+.site-footer .fl{color:rgba(255,255,255,.6);font-size:10px;}
+.site-footer .fl strong{color:var(--gold);}
+.site-footer .fr{color:rgba(255,255,255,.4);font-size:10px;font-style:italic;}
 
-    .pill-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
-    .pill {
-      display: flex; align-items: center; gap: 8px;
-      padding: 9px 18px; border: 1px solid var(--border2);
-      background: var(--cream); cursor: pointer;
-      font-size: 13px; color: var(--nearblack);
-      font-family: Arial, sans-serif; transition: all 0.2s;
-      user-select: none; font-weight: 400;
-    }
-    .pill input { display: none; }
-    .pill:hover { border-color: var(--plum); background: var(--lavender); }
-    .pill.selected { background: var(--plum); color: var(--white); border-color: var(--plum); font-weight: 700; }
-
-    .info-box {
-      margin-top: 20px; padding: 14px 16px;
-      background: var(--lavender); border-left: 4px solid var(--gold);
-      font-size: 13px; color: var(--nearblack); line-height: 1.6;
-    }
-    .info-box strong { color: var(--plum); font-weight: 700; }
-
-    .checklist-header {
-      display: flex; align-items: center; gap: 0;
-      background: var(--lavender); border: 1px solid var(--border);
-      margin-bottom: 20px; overflow: hidden;
-    }
-    .count-badge {
-      background: var(--plum); color: var(--white);
-      font-size: 22px; font-weight: 700;
-      font-family: Arial, sans-serif;
-      padding: 18px 20px; flex-shrink: 0;
-      min-width: 72px; text-align: center;
-    }
-    .progress-counts { flex: 1; padding: 14px 18px; }
-    .progress-counts h3 { font-size: 15px; font-weight: 700; color: var(--plum); }
-    .progress-counts p { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .progress-bar-inline { height: 5px; background: var(--border); margin-top: 8px; overflow: hidden; }
-    .progress-bar-inline-fill { height: 100%; background: var(--gold); transition: width 0.3s ease; }
-
-    .checklist { display: flex; flex-direction: column; gap: 6px; }
-    .check-item {
-      display: flex; align-items: center; gap: 14px;
-      padding: 12px 16px; background: var(--cream);
-      border: 1px solid var(--border); cursor: pointer;
-      transition: all 0.2s; user-select: none;
-    }
-    .check-item:hover { background: var(--lavender); border-color: var(--plum); }
-    .check-item.checked { background: var(--plum); border-color: var(--plum); }
-    .check-item.checked span { color: var(--white); }
-    .check-box {
-      width: 22px; height: 22px; border: 2px solid var(--border2);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: all 0.2s;
-      font-size: 13px; font-weight: 700; background: var(--white);
-      color: var(--plum);
-    }
-    .check-item.checked .check-box { background: var(--gold); border-color: var(--gold); color: var(--plum); }
-    .check-item span { font-size: 13px; color: var(--nearblack); }
-
-    .nav-row {
-      display: flex; align-items: center;
-      margin: 28px 28px 0; padding-top: 20px;
-      border-top: 2px solid var(--gold);
-    }
-    .btn-back {
-      background: transparent; border: 1px solid var(--border2);
-      color: var(--muted); padding: 11px 22px; cursor: pointer;
-      font-family: Arial, sans-serif; font-size: 13px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.8px; transition: all 0.2s;
-    }
-    .btn-back:hover { border-color: var(--plum); color: var(--plum); }
-    .btn-next {
-      margin-left: auto; background: var(--plum); border: none;
-      color: var(--white); padding: 12px 28px; cursor: pointer;
-      font-family: Arial, sans-serif; font-size: 13px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.8px; transition: background 0.2s;
-    }
-    .btn-next:hover { background: var(--plum-mid); }
-    .btn-next:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; }
-
-    .submitted-card {
-      background: var(--white); border: 1px solid var(--border);
-      border-top: 4px solid var(--gold); padding: 48px 32px;
-      text-align: center;
-    }
-    .submitted-icon {
-      width: 60px; height: 60px; background: var(--plum);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 20px; font-size: 26px; color: var(--gold);
-    }
-    .submitted-card h2 {
-      font-size: 22px; font-weight: 700; color: var(--plum);
-      margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .submitted-card p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 30px; }
-    .summary-grid {
-      display: grid; grid-template-columns: 1fr 1fr 1fr;
-      gap: 1px; background: var(--border);
-      border: 1px solid var(--border); margin-bottom: 30px; text-align: left;
-    }
-    .summary-item { background: var(--cream); padding: 14px 16px; }
-    .summary-item .s-label { font-size: 10px; color: var(--plum); text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700; }
-    .summary-item .s-value { font-size: 14px; font-weight: 700; color: var(--nearblack); margin-top: 4px; }
-    .btn-reset {
-      background: transparent; border: 1px solid var(--plum);
-      color: var(--plum); padding: 11px 28px; cursor: pointer;
-      font-family: Arial, sans-serif; font-size: 13px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.8px; transition: all 0.2s;
-    }
-    .btn-reset:hover { background: var(--plum); color: var(--white); }
-
-    .footer {
-      background: var(--plum); padding: 16px 40px;
-      display: flex; align-items: center; justify-content: space-between; margin-top: 40px;
-    }
-    .footer-left { color: rgba(255,255,255,0.6); font-size: 11px; }
-    .footer-left strong { color: var(--gold); }
-    .footer-right { color: rgba(255,255,255,0.4); font-size: 11px; font-style: italic; }
-
-    .step-panel { display: none; }
-    .step-panel.active { display: block; }
-
-    @media (max-width: 560px) {
-      .field-grid { grid-template-columns: 1fr; }
-      .field.wide { grid-column: 1; }
-      .summary-grid { grid-template-columns: 1fr 1fr; }
-      .top-bar { padding: 14px 16px; }
-      .page { padding: 24px 12px; }
-      .step-btn .step-label { display: none; }
-      .card-body { padding: 0 16px; }
-      .nav-row { margin: 28px 16px 0; }
-    }
-  </style>
+@media print{
+  .top-bar,.tab-nav,.print-bar,.generate-hero,.readiness-grid,.gen-btn,.gen-note,.site-footer,.alert-banner{display:none!important;}
+  #briefingOutput{display:block!important;}
+  .tab-panel{display:block!important;}
+  body{padding:0;}
+  .page{padding:0;max-width:100%;}
+  .briefing-doc{border:none;padding:20px;}
+}
+@media(max-width:600px){
+  .field-grid,.field-grid-3,.brief-two-col,.readiness-grid{grid-template-columns:1fr;}
+  .field.wide,.field.full{grid-column:1;}
+  .top-bar{padding:12px 16px;}
+  .page{padding:20px 12px;}
+}
+</style>
 </head>
 <body>
 
+<!-- TOP BAR -->
 <div class="top-bar">
   <div class="top-bar-left">
     <div class="firm-badge">A2</div>
     <div>
       <div class="firm-name">A2 Systems Architecture</div>
-      <div class="tool-label">Event Logistics Tool</div>
+      <div class="tool-label">GA2 Event Platform</div>
     </div>
   </div>
-  <div class="top-bar-right">Confidential</div>
+  <div class="top-bar-right" id="eventNameDisplay">No Event Loaded</div>
 </div>
 
 <div class="page">
 
-  <div class="page-title-block">
-    <h1>GA2 Event Logistics</h1>
-    <p>Complete each section to initiate the event workflow and route the record to the correct teams.</p>
+  <!-- ALERT BANNER -->
+  <div class="alert-banner amber" id="alertBanner"></div>
+
+  <!-- TAB NAV -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab(0)">01 - Event Setup</button>
+    <button class="tab-btn" onclick="switchTab(1)">02 - Guests &amp; Research</button>
+    <button class="tab-btn" onclick="switchTab(2)">03 - Checklist</button>
+    <button class="tab-btn" onclick="switchTab(3)">04 - Generate Briefing</button>
   </div>
 
-  <div class="step-nav" id="stepNav"></div>
+  <!-- ============================================================ -->
+  <!-- TAB 1: EVENT SETUP -->
+  <!-- ============================================================ -->
+  <div class="tab-panel active" id="tab-0">
 
-  <div class="progress-track">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
-
-  <div class="card" id="mainCard">
-
-    <!-- STEP 0 -->
-    <div class="step-panel active" id="panel-0">
-      <div class="section-header">
-        <div class="s-num">01</div>
-        <h2>Event Details</h2>
-      </div>
-      <div class="card-body">
-        <p class="section-sub">Define the event type and purpose. This information routes the record to the communications team and determines the logistics path.</p>
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">A</div><h3>Core Event Information</h3></div>
+      <div class="section-body">
         <div class="field-grid">
+          <div class="field wide">
+            <label class="fl">Event Name *</label>
+            <input type="text" id="eventName" placeholder="e.g. A Centennial Gathering in Key Biscayne" oninput="updateDisplay()"/>
+          </div>
           <div class="field">
-            <label class="field-label">Event Type *</label>
-            <select id="eventType" onchange="updateCommsNote()">
+            <label class="fl">Event Date *</label>
+            <input type="date" id="eventDate" onchange="checkDateAlert()"/>
+          </div>
+          <div class="field">
+            <label class="fl">Event Time</label>
+            <input type="text" id="eventTime" placeholder="e.g. 6:30 - 9:30 pm"/>
+          </div>
+          <div class="field wide">
+            <label class="fl">Location / Venue</label>
+            <input type="text" id="eventLocation" placeholder="e.g. The Weinstein Berman Residence, 364 Gulf Road, Key Biscayne"/>
+          </div>
+          <div class="field">
+            <label class="fl">Event Type</label>
+            <select id="eventType">
               <option value="">Select type...</option>
               <option>Fundraising</option>
               <option>Donor Recognition / Thank-You</option>
               <option>Engagement</option>
               <option>Stewardship</option>
+              <option>Cultivation</option>
               <option>Other</option>
             </select>
           </div>
           <div class="field">
-            <label class="field-label">Event Purpose *</label>
-            <select id="eventPurpose" onchange="updateCommsNote()">
-              <option value="">Select purpose...</option>
-              <option>Encourage Giving</option>
-              <option>Say Thank You</option>
-              <option>Cultivate Relationship</option>
-              <option>Recognition</option>
+            <label class="fl">Location Type</label>
+            <select id="locationType">
+              <option value="">Select...</option>
+              <option>On-Campus (In-House)</option>
+              <option>External (Donor-Hosted)</option>
+              <option>External (Venue)</option>
             </select>
           </div>
           <div class="field">
-            <label class="field-label">Event Date *</label>
-            <input type="date" id="eventDate"/>
+            <label class="fl">Guest Cap</label>
+            <input type="number" id="guestCap" placeholder="e.g. 80"/>
           </div>
           <div class="field">
-            <label class="field-label">Event Time</label>
-            <input type="time" id="eventTime"/>
-          </div>
-        </div>
-        <div class="info-box" id="commsNote" style="display:none">
-          <strong>Communications Routing:</strong> <span id="commsNoteText"></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 1 -->
-    <div class="step-panel" id="panel-1">
-      <div class="section-header">
-        <div class="s-num">02</div>
-        <h2>Host &amp; Location</h2>
-      </div>
-      <div class="card-body">
-        <p class="section-sub">Identify where the event is held and capture all host and contact details. External events require donor contact information. On-campus events require room and resource documentation.</p>
-        <div class="field">
-          <label class="field-label">Location Type *</label>
-          <div class="pill-group">
-            <label class="pill" id="pill-campus" onclick="setLocation('on-campus')">
-              <input type="radio" name="locationType" value="on-campus"/> On-Campus (In-House)
-            </label>
-            <label class="pill" id="pill-external" onclick="setLocation('external')">
-              <input type="radio" name="locationType" value="external"/> External (Donor-Hosted)
-            </label>
-          </div>
-        </div>
-        <div id="externalFields" style="display:none">
-          <div class="gold-rule"></div>
-          <span class="label-col">Donor / Host Information</span>
-          <div class="field-grid" style="margin-top:14px">
-            <div class="field">
-              <label class="field-label">Donor / Host Name</label>
-              <input type="text" id="donorName" placeholder="Full name"/>
-            </div>
-            <div class="field">
-              <label class="field-label">Host Address</label>
-              <input type="text" id="hostAddress" placeholder="Full address"/>
-            </div>
-            <div class="field">
-              <label class="field-label">Contact Person</label>
-              <input type="text" id="contactName" placeholder="Name"/>
-            </div>
-            <div class="field">
-              <label class="field-label">Contact Phone</label>
-              <input type="tel" id="contactPhone" placeholder="Phone number"/>
-            </div>
-            <div class="field wide">
-              <label class="field-label">Contact Email</label>
-              <input type="email" id="contactEmail" placeholder="email@example.com"/>
-            </div>
-          </div>
-        </div>
-        <div id="campusFields" style="display:none">
-          <div class="gold-rule"></div>
-          <span class="label-col">On-Campus Resources</span>
-          <div class="field-grid" style="margin-top:14px">
-            <div class="field">
-              <label class="field-label">Campus Room / Venue</label>
-              <input type="text" id="campusRoom" placeholder="e.g. Conference Room B"/>
-            </div>
-            <div class="field wide">
-              <label class="field-label">Available Resources / Equipment</label>
-              <textarea id="campusResources" placeholder="List tables, chairs, AV, and other assets already on campus..."></textarea>
-            </div>
+            <label class="fl">Current RSVP Count</label>
+            <input type="number" id="rsvpCount" placeholder="e.g. 73"/>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- STEP 2 -->
-    <div class="step-panel" id="panel-2">
-      <div class="section-header">
-        <div class="s-num">03</div>
-        <h2>Logistics</h2>
-      </div>
-      <div class="card-body">
-        <p class="section-sub">Determine the correct request type and identify all service needs. This section routes the record to the appropriate logistics team.</p>
-        <div class="field">
-          <label class="field-label">Request Type *</label>
-          <div class="pill-group">
-            <label class="pill" id="pill-workorder" onclick="setRequest('work-order')">
-              <input type="radio" name="requestType" value="work-order"/> Work Order
-            </label>
-            <label class="pill" id="pill-activities" onclick="setRequest('activities-request')">
-              <input type="radio" name="requestType" value="activities-request"/> Activities Request
-            </label>
-          </div>
-        </div>
-        <div class="gold-rule"></div>
-        <div class="field">
-          <label class="field-label">Services Required</label>
-          <div class="pill-group">
-            <label class="pill" id="pill-catering" onclick="toggleService('catering')">
-              <input type="checkbox" id="svc-catering"/> Catering
-            </label>
-            <label class="pill" id="pill-equipment" onclick="toggleService('equipment')">
-              <input type="checkbox" id="svc-equipment"/> Equipment / AV
-            </label>
-          </div>
-        </div>
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">B</div><h3>Event Format &amp; Program</h3></div>
+      <div class="section-body">
         <div class="field-grid">
           <div class="field wide">
-            <label class="field-label">Special Services / Notes</label>
-            <textarea id="specialServices" placeholder="Describe any additional service requirements..."></textarea>
+            <label class="fl">Event Format</label>
+            <input type="text" id="eventFormat" placeholder="e.g. Short remarks from Simon and Students (~20 min)"/>
           </div>
           <div class="field wide">
-            <label class="field-label">Layout Notes</label>
-            <textarea id="layoutNotes" placeholder="Describe the layout or reference an existing layout file..."></textarea>
+            <label class="fl">Program Outcome Strategy</label>
+            <textarea id="programOutcome" placeholder="What is the goal of this event? What should guests leave thinking, feeling, or doing?"></textarea>
+          </div>
+          <div class="field wide">
+            <label class="fl">Event Timeline / Run of Show</label>
+            <textarea id="eventTimeline" rows="6" placeholder="e.g.&#10;6:30 pm - Guests begin arriving (valet parking)&#10;7:00 pm - Simon welcomes guests&#10;7:20 pm - Simon thanks students and hosts"></textarea>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- STEP 3 -->
-    <div class="step-panel" id="panel-3">
-      <div class="section-header">
-        <div class="s-num">04</div>
-        <h2>Event Checklist</h2>
-      </div>
-      <div class="card-body">
-        <p class="section-sub">Confirm each item before the event proceeds. The record cannot be submitted until all items are marked complete.</p>
-        <div class="checklist-header">
-          <div class="count-badge" id="countBadge">0/7</div>
-          <div class="progress-counts">
-            <h3 id="ringTitle">7 Items Remaining</h3>
-            <p id="ringSubtitle">Mark all items complete to submit this record.</p>
-            <div class="progress-bar-inline">
-              <div class="progress-bar-inline-fill" id="inlineBar" style="width:0%"></div>
-            </div>
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">C</div><h3>Key Dates</h3></div>
+      <div class="section-body">
+        <div class="field-grid">
+          <div class="field">
+            <label class="fl">Event Planning Meeting Date</label>
+            <input type="date" id="planningDate"/>
           </div>
-        </div>
-        <div class="checklist">
-          <div class="check-item" onclick="toggleCheck(this)" data-key="inviteCreated">
-            <div class="check-box"></div><span>Event invite created</span>
+          <div class="field">
+            <label class="fl">Briefing Date</label>
+            <input type="date" id="briefingDate"/>
           </div>
-          <div class="check-item" onclick="toggleCheck(this)" data-key="commNotified">
-            <div class="check-box"></div><span>Communications team notified</span>
+          <div class="field">
+            <label class="fl">Leadership Briefing Date</label>
+            <input type="date" id="leadershipBriefingDate"/>
           </div>
-          <div class="check-item" onclick="toggleCheck(this)" data-key="hostConfirmed">
-            <div class="check-box"></div><span>Host and location details confirmed</span>
+          <div class="field">
+            <label class="fl">BOT Briefing Date</label>
+            <input type="date" id="botBriefingDate"/>
           </div>
-          <div class="check-item" onclick="toggleCheck(this)" data-key="layoutConfirmed">
-            <div class="check-box"></div><span>Room layout confirmed</span>
-          </div>
-          <div class="check-item" onclick="toggleCheck(this)" data-key="cateringRequested">
-            <div class="check-box"></div><span>Catering request submitted</span>
-          </div>
-          <div class="check-item" onclick="toggleCheck(this)" data-key="workOrderFiled">
-            <div class="check-box"></div><span>Work order / activities request filed</span>
-          </div>
-          <div class="check-item" onclick="toggleCheck(this)" data-key="teamInfoComplete">
-            <div class="check-box"></div><span>All team and donor information collected</span>
+          <div class="field">
+            <label class="fl">Debrief Date</label>
+            <input type="date" id="debriefDate"/>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="nav-row">
-      <button class="btn-back" id="btnBack" onclick="goBack()" style="display:none">Back</button>
-      <button class="btn-next" id="btnNext" onclick="goNext()">Continue</button>
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">D</div><h3>Assets &amp; Materials</h3></div>
+      <div class="section-body">
+        <div class="field-grid">
+          <div class="field wide">
+            <label class="fl">Physical Assets / Materials at Event</label>
+            <textarea id="eventAssets" placeholder="e.g. Gulliver student illustrations, Campaign At-A-Glance, G|100 Car Magnets, Retractable banner Campaign Renderings"></textarea>
+          </div>
+          <div class="field wide">
+            <label class="fl">Notes</label>
+            <textarea id="eventNotes" placeholder="Any other relevant notes about this event..."></textarea>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">E</div><h3>External Links</h3></div>
+      <div class="section-body">
+        <p class="section-sub">Paste Veracross, Google Docs, or other system links here. They will appear as clickable links in the generated briefing.</p>
+        <div class="field-grid">
+          <div class="field">
+            <label class="fl">RSVP / Event Attendance Link</label>
+            <input type="url" id="rsvpLink" placeholder="https://"/>
+          </div>
+          <div class="field">
+            <label class="fl">Guest Research Link</label>
+            <input type="url" id="researchLink" placeholder="https://"/>
+          </div>
+          <div class="field">
+            <label class="fl">BOT Research Link</label>
+            <input type="url" id="botResearchLink" placeholder="https://"/>
+          </div>
+          <div class="field">
+            <label class="fl">Talking Points Link</label>
+            <input type="url" id="talkingPointsLink" placeholder="https://"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- SUBMITTED -->
-  <div id="submittedView" style="display:none">
-    <div class="submitted-card">
-      <div class="submitted-icon">✦</div>
-      <h2>Event Record Initiated</h2>
-      <p>The event logistics record has been submitted. The communications team will be notified and logistics routing will begin based on the information provided.</p>
-      <div class="summary-grid" id="summaryGrid"></div>
-      <button class="btn-reset" onclick="resetForm()">Start New Event Record</button>
+  <!-- ============================================================ -->
+  <!-- TAB 2: GUESTS & RESEARCH -->
+  <!-- ============================================================ -->
+  <div class="tab-panel" id="tab-1">
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">A</div><h3>Advancement Invitation Strategy</h3></div>
+      <div class="section-body">
+        <div class="field">
+          <label class="fl">Constituent Groups Invited</label>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;" id="constituentGroup">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Current Parents"/> Current Parents</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="BOT"/> BOT</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Past BOT"/> Past BOT</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Leadership"/> Leadership</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Alumni"/> Alumni</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Parents of Alumni"/> Parents of Alumni</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Grandparents / Friends"/> Grandparents / Friends</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="New Parents"/> New Parents</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Faculty / Staff"/> Faculty / Staff</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="fl">Additional Invitation Strategy Notes</label>
+          <textarea id="invitationStrategy" placeholder="e.g. All Current Families in Key Biscayne, Trustees in Key Biscayne, Top Newly Admitted Families..."></textarea>
+        </div>
+      </div>
     </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">B</div><h3>Prospects in the Room ($500k+)</h3></div>
+      <div class="section-body">
+        <p class="section-sub">Add each major prospect attending. Include assignment notes where applicable.</p>
+        <div id="prospectsContainer"></div>
+        <button class="add-btn" onclick="addPerson('prospectsContainer','prospect')">+ Add Prospect</button>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">C</div><h3>Donors in the Room</h3></div>
+      <div class="section-body">
+        <p class="section-sub">Add confirmed donors attending. Include giving history and any proposal notes.</p>
+        <div id="donorsContainer"></div>
+        <button class="add-btn" onclick="addPerson('donorsContainer','donor')">+ Add Donor</button>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">D</div><h3>BOT Attendance</h3></div>
+      <div class="section-body">
+        <div class="field-grid">
+          <div class="field wide">
+            <label class="fl">BOT Members Attending</label>
+            <textarea id="botAttending" placeholder="List each BOT member attending, one per line"></textarea>
+          </div>
+          <div class="field wide">
+            <label class="fl">BOT Members Invited but Unable to Attend</label>
+            <textarea id="botUnable" placeholder="List each BOT member, one per line"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">E</div><h3>Students Participating</h3></div>
+      <div class="section-body">
+        <p class="section-sub">List students who will speak, present, or participate in the program.</p>
+        <div id="studentsContainer"></div>
+        <button class="add-btn" onclick="addPerson('studentsContainer','student')">+ Add Student</button>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">F</div><h3>Gulliver Attendees (Staff)</h3></div>
+      <div class="section-body">
+        <div class="field">
+          <label class="fl">Staff Attending</label>
+          <textarea id="gulliverAttendees" placeholder="List each staff member attending, one per line&#10;e.g.&#10;Simon Hess&#10;Frank Steel&#10;Giselle Torres"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">G</div><h3>Suggested Talking Points</h3></div>
+      <div class="section-body">
+        <div class="field">
+          <label class="fl">Key Talking Points</label>
+          <textarea id="talkingPoints" rows="5" placeholder="Enter key talking points or paste an overview here. For the full document paste the link in Tab 1."></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TAB 3: CHECKLIST -->
+  <!-- ============================================================ -->
+  <div class="tab-panel" id="tab-2">
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">1</div><h3>Event Owner Tasks</h3></div>
+      <div class="section-body" style="overflow-x:auto;">
+        <table class="check-table" id="tbl-owner"></table>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">2</div><h3>Data Team Tasks</h3></div>
+      <div class="section-body" style="overflow-x:auto;">
+        <table class="check-table" id="tbl-data"></table>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">3</div><h3>Communications Tasks</h3></div>
+      <div class="section-body" style="overflow-x:auto;">
+        <table class="check-table" id="tbl-comms"></table>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">4</div><h3>Events Manager Tasks</h3></div>
+      <div class="section-body" style="overflow-x:auto;">
+        <table class="check-table" id="tbl-events"></table>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">5</div><h3>Budget Tasks</h3></div>
+      <div class="section-body" style="overflow-x:auto;">
+        <table class="check-table" id="tbl-budget"></table>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><div class="s-num">6</div><h3>Security &amp; Logistics Tasks</h3></div>
+      <div class="section-body" style="overflow-x:auto;">
+        <table class="check-table" id="tbl-security"></table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TAB 4: GENERATE BRIEFING -->
+  <!-- ============================================================ -->
+  <div class="tab-panel" id="tab-3">
+
+    <div class="generate-hero">
+      <h2>Generate Event Briefing Document</h2>
+      <p>Review readiness below. When your team is ready, click Generate to produce the printable briefing document based on everything entered across all tabs.</p>
+    </div>
+
+    <div class="readiness-grid" id="readinessGrid">
+      <div class="readiness-card"><div class="r-icon">📋</div><div class="r-label">Event Setup</div><div class="r-val" id="r-setup">—</div></div>
+      <div class="readiness-card"><div class="r-icon">👥</div><div class="r-label">Guests Entered</div><div class="r-val" id="r-guests">—</div></div>
+      <div class="readiness-card"><div class="r-icon">✓</div><div class="r-label">Checklist Complete</div><div class="r-val" id="r-checklist">—</div></div>
+    </div>
+
+    <button class="gen-btn" id="genBtn" onclick="generateBriefing()">Generate Event Briefing Document</button>
+    <p class="gen-note">The briefing will appear below. Use your browser's Print function (Ctrl+P / Cmd+P) to save as PDF or print.</p>
+
+    <div style="height:24px;"></div>
+    <div id="briefingOutput"></div>
+
   </div>
 
 </div>
 
-<div class="footer">
-  <div class="footer-left"><strong>A2 Systems Architecture LLC</strong> &nbsp;|&nbsp; GA2 Event Logistics Tool &nbsp;|&nbsp; Confidential</div>
-  <div class="footer-right">First will be best, then will be first.</div>
+<!-- FOOTER -->
+<div class="site-footer">
+  <div class="fl"><strong>A2 Systems Architecture LLC</strong> &nbsp;|&nbsp; GA2 Event Platform &nbsp;|&nbsp; Confidential</div>
+  <div class="fr">First will be best, then will be first.</div>
 </div>
 
 <script>
-  const STEPS = [
-    { label: "Event Details",   num: "01" },
-    { label: "Host & Location", num: "02" },
-    { label: "Logistics",       num: "03" },
-    { label: "Checklist",       num: "04" },
-  ];
+// =============================================
+// TAB SWITCHING
+// =============================================
+function switchTab(i){
+  document.querySelectorAll('.tab-btn').forEach((b,idx)=>b.classList.toggle('active',idx===i));
+  document.querySelectorAll('.tab-panel').forEach((p,idx)=>p.classList.toggle('active',idx===i));
+  if(i===3) updateReadiness();
+}
 
-  let currentStep = 0;
-  let locationType = "";
-  let requestType = "";
-  let services = { catering: false, equipment: false };
-  let checks = {
-    inviteCreated: false, commNotified: false, hostConfirmed: false,
-    layoutConfirmed: false, cateringRequested: false,
-    workOrderFiled: false, teamInfoComplete: false
-  };
+// =============================================
+// DISPLAY / ALERT
+// =============================================
+function updateDisplay(){
+  const n=document.getElementById('eventName').value;
+  document.getElementById('eventNameDisplay').textContent=n||'No Event Loaded';
+}
 
-  function buildNav() {
-    const nav = document.getElementById('stepNav');
-    nav.innerHTML = '';
-    STEPS.forEach((s, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'step-btn' +
-        (i === currentStep ? ' active' : '') +
-        (i < currentStep ? ' done' : '');
-      btn.innerHTML = `<span class="step-num">${i < currentStep ? '✓' : s.num}</span>
-        <span class="step-label">${s.label}</span>`;
-      btn.onclick = () => goTo(i);
-      nav.appendChild(btn);
+function checkDateAlert(){
+  const d=document.getElementById('eventDate').value;
+  if(!d) return;
+  const eventDay=new Date(d+'T00:00:00');
+  const today=new Date(); today.setHours(0,0,0,0);
+  const diff=Math.round((eventDay-today)/(1000*60*60*24));
+  const banner=document.getElementById('alertBanner');
+  if(diff<=2 && diff>=0){
+    banner.className='alert-banner amber';
+    banner.textContent=`EVENT ALERT: This event is ${diff===0?'TODAY':diff===1?'TOMORROW':'in 2 days'}. The briefing document should be generated and distributed now.`;
+    banner.style.display='block';
+  } else if(diff<0){
+    banner.className='alert-banner green';
+    banner.textContent='This event has already passed.';
+    banner.style.display='block';
+  } else {
+    banner.style.display='none';
+  }
+}
+
+// =============================================
+// PEOPLE ENTRIES
+// =============================================
+function addPerson(containerId, type){
+  const c=document.getElementById(containerId);
+  const idx=c.children.length;
+  const div=document.createElement('div');
+  div.className='person-entry';
+  div.dataset.type=type;
+
+  let fields='';
+  if(type==='prospect'){
+    fields=`
+      <div class="field-grid">
+        <div class="field"><label class="fl">Full Name</label><input type="text" class="p-name" placeholder="Full name"/></div>
+        <div class="field"><label class="fl">Assignment / Notes</label><input type="text" class="p-notes" placeholder="e.g. Assigned to Chris Drew Top 3 BOT list"/></div>
+        <div class="field wide"><label class="fl">Research Link (optional)</label><input type="url" class="p-link" placeholder="https://"/></div>
+      </div>`;
+  } else if(type==='donor'){
+    fields=`
+      <div class="field-grid">
+        <div class="field"><label class="fl">Full Name</label><input type="text" class="p-name" placeholder="Full name"/></div>
+        <div class="field"><label class="fl">Giving History / Notes</label><input type="text" class="p-notes" placeholder="e.g. $150k to last campaign, also rated $500k+"/></div>
+        <div class="field wide"><label class="fl">Proposal / Notes Link (optional)</label><input type="url" class="p-link" placeholder="https://"/></div>
+      </div>`;
+  } else if(type==='student'){
+    fields=`
+      <div class="field-grid">
+        <div class="field"><label class="fl">Student Name</label><input type="text" class="p-name" placeholder="Full name"/></div>
+        <div class="field"><label class="fl">Grade / Program</label><input type="text" class="p-notes" placeholder="e.g. 8th Grade MYP Student"/></div>
+      </div>`;
+  }
+
+  div.innerHTML=`<button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>${fields}`;
+  c.appendChild(div);
+}
+
+// =============================================
+// CHECKLIST TABLES
+// =============================================
+const CHECKLIST_DATA={
+  'tbl-owner':[
+    ['Event Purpose defined',''],
+    ['Event audience identified',''],
+    ['Talking points info relayed',''],
+    ['Event details shared with all teams',''],
+    ['Constituent groups confirmed',''],
+    ['Board needs identified',''],
+    ['Briefing requested',''],
+    ['Research doc / Briefing (Board version) sent',''],
+  ],
+  'tbl-data':[
+    ['Guest list built',''],
+    ['Guest list query approved','Leadership'],
+    ['Wealth screening completed',''],
+    ['Research completed',''],
+    ['Donor flags reviewed',''],
+    ['RSVP tracking validated',''],
+    ['Attendance report delivered',''],
+    ['Post-event notes uploaded',''],
+    ['Briefing document completed',''],
+  ],
+  'tbl-comms':[
+    ['Invite 1 sent','Communications Lead'],
+    ['Invite 2 sent','Communications Lead'],
+    ['Reminder 1 sent',''],
+    ['Reminder 2 sent',''],
+    ['See You Tomorrow email sent',''],
+    ['Follow-up email sent',''],
+    ['Included in Weekly (if needed)',''],
+    ['Social coverage arranged (if needed)',''],
+    ['Photographer confirmed',''],
+    ['Videographer confirmed',''],
+    ['Talking Points finalized',''],
+    ['Signage approved (all locations)',''],
+    ['Campaign assets confirmed (brochures + physical signage)',''],
+  ],
+  'tbl-events':[
+    ['Calendar hold sent','Events Manager'],
+    ['Event created in Veracross',''],
+    ['Venue walkthrough completed',''],
+    ['Floor plan and vendor layout confirmed',''],
+    ['Minute-by-minute run of show finalized',''],
+    ['Staffing assignments confirmed',''],
+    ['Setup and breakdown coordinated',''],
+    ['On-site execution plan complete',''],
+    ['RSVPs managed and confirmed',''],
+    ['Name tags prepared (include Parent Year)',''],
+    ['Follow-up calls / texts for unconfirmed guests',''],
+    ['Host gift arranged',''],
+    ['Guest gift arranged',''],
+    ['Event form submitted for campus (activities request)',''],
+    ['Work order submitted',''],
+    ['Catering request submitted',''],
+    ['Maintenance needs confirmed',''],
+    ['Maintenance schedule confirmed for pickup and delivery',''],
+  ],
+  'tbl-budget':[
+    ['Budget spreadsheet created',''],
+    ['Invoice processing (POs) initiated',''],
+    ['Budget tracking created',''],
+    ['Final budget reviewed',''],
+    ['In-kind gifts finalized',''],
+  ],
+  'tbl-security':[
+    ['Risk assessment completed',''],
+    ['Security needs confirmed',''],
+    ['Permits and parking approved',''],
+    ['Print research prepared for Leadership',''],
+    ['Final talking points approved',''],
+    ['Staffing lead for program confirmed',''],
+    ['Volunteer involvement confirmed',''],
+  ],
+};
+
+function buildTables(){
+  Object.entries(CHECKLIST_DATA).forEach(([id,tasks])=>{
+    const tbl=document.getElementById(id);
+    tbl.innerHTML=`<thead><tr><th>Task</th><th>Owner</th><th style="width:110px">Status</th><th style="width:120px">Due Date</th><th>Notes</th></tr></thead><tbody></tbody>`;
+    const tbody=tbl.querySelector('tbody');
+    tasks.forEach((t,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td>${t[0]}</td>
+        <td><input type="text" value="${t[1]}" placeholder="Owner" style="min-width:100px"/></td>
+        <td>
+          <select class="status-sel" onchange="updateStatusStyle(this)">
+            <option value="todo">To Do</option>
+            <option value="inprog">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+        </td>
+        <td><input type="date"/></td>
+        <td><input type="text" placeholder="Notes"/></td>`;
+      tbody.appendChild(tr);
     });
-  }
+  });
+}
 
-  function updateProgress() {
-    document.getElementById('progressFill').style.width =
-      `${((currentStep + 1) / STEPS.length) * 100}%`;
-  }
+function updateStatusStyle(sel){
+  sel.className='status-sel';
+}
 
-  function updateNavBtns() {
-    const back = document.getElementById('btnBack');
-    const next = document.getElementById('btnNext');
-    back.style.display = currentStep > 0 ? 'block' : 'none';
-    if (currentStep < STEPS.length - 1) {
-      next.textContent = 'Continue';
-      next.disabled = false;
-    } else {
-      next.textContent = 'Submit Event Record';
-      next.disabled = !Object.values(checks).every(Boolean);
-    }
-  }
+// =============================================
+// READINESS
+// =============================================
+function updateReadiness(){
+  const name=document.getElementById('eventName').value;
+  const date=document.getElementById('eventDate').value;
+  const loc=document.getElementById('eventLocation').value;
+  const setupScore=[name,date,loc].filter(Boolean).length;
+  document.getElementById('r-setup').textContent=setupScore===3?'Ready':`${setupScore}/3 Fields`;
 
-  function goTo(i) {
-    const card = document.getElementById('mainCard');
-    card.classList.add('fade');
-    setTimeout(() => {
-      document.getElementById(`panel-${currentStep}`).classList.remove('active');
-      currentStep = i;
-      document.getElementById(`panel-${currentStep}`).classList.add('active');
-      buildNav(); updateProgress(); updateNavBtns();
-      card.classList.remove('fade');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 180);
-  }
+  const prospects=document.getElementById('prospectsContainer').children.length;
+  const donors=document.getElementById('donorsContainer').children.length;
+  const attendees=document.getElementById('gulliverAttendees').value.trim();
+  document.getElementById('r-guests').textContent=`${prospects+donors} People`;
 
-  function goNext() {
-    if (currentStep < STEPS.length - 1) goTo(currentStep + 1);
-    else submitForm();
-  }
+  let done=0,total=0;
+  document.querySelectorAll('.status-sel').forEach(s=>{total++;if(s.value==='done')done++;});
+  document.getElementById('r-checklist').textContent=total>0?`${done}/${total}`:'0 tasks';
+}
 
-  function goBack() { if (currentStep > 0) goTo(currentStep - 1); }
+// =============================================
+// GENERATE BRIEFING
+// =============================================
+function generateBriefing(){
+  const name=document.getElementById('eventName').value||'[Event Name]';
+  const date=document.getElementById('eventDate').value;
+  const time=document.getElementById('eventTime').value||'';
+  const loc=document.getElementById('eventLocation').value||'';
+  const format=document.getElementById('eventFormat').value||'';
+  const outcome=document.getElementById('programOutcome').value||'';
+  const timeline=document.getElementById('eventTimeline').value||'';
+  const assets=document.getElementById('eventAssets').value||'';
+  const notes=document.getElementById('eventNotes').value||'';
+  const rsvpCount=document.getElementById('rsvpCount').value||'';
+  const guestCap=document.getElementById('guestCap').value||'';
+  const rsvpLink=document.getElementById('rsvpLink').value||'';
+  const researchLink=document.getElementById('researchLink').value||'';
+  const botResearchLink=document.getElementById('botResearchLink').value||'';
+  const talkingPointsLink=document.getElementById('talkingPointsLink').value||'';
+  const talkingPoints=document.getElementById('talkingPoints').value||'';
+  const invStrategy=document.getElementById('invitationStrategy').value||'';
+  const botAttending=document.getElementById('botAttending').value||'';
+  const botUnable=document.getElementById('botUnable').value||'';
+  const gulliverAttendees=document.getElementById('gulliverAttendees').value||'';
 
-  function updateCommsNote() {
-    const type = document.getElementById('eventType').value;
-    const purpose = document.getElementById('eventPurpose').value;
-    const box = document.getElementById('commsNote');
-    if (type && purpose) {
-      document.getElementById('commsNoteText').textContent =
-        `This is a ${type} event to ${purpose.toLowerCase()}. The communications team must begin drafting the invite and messaging before this record advances.`;
-      box.style.display = 'block';
-    } else { box.style.display = 'none'; }
-  }
+  const constituents=[...document.querySelectorAll('#constituentGroup input:checked')].map(c=>c.value);
 
-  function setLocation(val) {
-    locationType = val;
-    document.getElementById('pill-campus').classList.toggle('selected', val === 'on-campus');
-    document.getElementById('pill-external').classList.toggle('selected', val === 'external');
-    document.getElementById('campusFields').style.display = val === 'on-campus' ? 'block' : 'none';
-    document.getElementById('externalFields').style.display = val === 'external' ? 'block' : 'none';
-  }
+  // Format date nicely
+  let dateStr=date;
+  if(date){const d=new Date(date+'T00:00:00');dateStr=d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
 
-  function setRequest(val) {
-    requestType = val;
-    document.getElementById('pill-workorder').classList.toggle('selected', val === 'work-order');
-    document.getElementById('pill-activities').classList.toggle('selected', val === 'activities-request');
-  }
+  // Prospects
+  let prospectsHtml='<ul>';
+  const pEntries=document.querySelectorAll('#prospectsContainer .person-entry');
+  if(pEntries.length===0){prospectsHtml+='<li>None identified</li>';}
+  pEntries.forEach(e=>{
+    const n=e.querySelector('.p-name')?.value||'';
+    const notes=e.querySelector('.p-notes')?.value||'';
+    const link=e.querySelector('.p-link')?.value||'';
+    if(n) prospectsHtml+=`<li><strong>${n}</strong>${notes?' - '+notes:''}${link?` <a class="brief-link" href="${link}" target="_blank">[Research]</a>`:''}</li>`;
+  });
+  prospectsHtml+='</ul>';
 
-  function toggleService(svc) {
-    services[svc] = !services[svc];
-    const id = svc === 'catering' ? 'pill-catering' : 'pill-equipment';
-    document.getElementById(id).classList.toggle('selected', services[svc]);
-  }
+  // Donors
+  let donorsHtml='<ul>';
+  const dEntries=document.querySelectorAll('#donorsContainer .person-entry');
+  if(dEntries.length===0){donorsHtml+='<li>None identified</li>';}
+  dEntries.forEach(e=>{
+    const n=e.querySelector('.p-name')?.value||'';
+    const notes=e.querySelector('.p-notes')?.value||'';
+    const link=e.querySelector('.p-link')?.value||'';
+    if(n) donorsHtml+=`<li><strong>${n}</strong>${notes?' - '+notes:''}${link?` <a class="brief-link" href="${link}" target="_blank">[Proposal]</a>`:''}</li>`;
+  });
+  donorsHtml+='</ul>';
 
-  function toggleCheck(el) {
-    const key = el.dataset.key;
-    checks[key] = !checks[key];
-    el.classList.toggle('checked', checks[key]);
-    el.querySelector('.check-box').textContent = checks[key] ? '✓' : '';
-    const done = Object.values(checks).filter(Boolean).length;
-    const total = Object.keys(checks).length;
-    const remaining = total - done;
-    document.getElementById('countBadge').textContent = `${done}/${total}`;
-    document.getElementById('ringTitle').textContent =
-      done === total ? 'All Items Complete' : `${remaining} Item${remaining !== 1 ? 's' : ''} Remaining`;
-    document.getElementById('ringSubtitle').textContent =
-      done === total ? 'This record is ready to submit.' : 'Mark all items complete to submit this record.';
-    document.getElementById('inlineBar').style.width = `${(done / total) * 100}%`;
-    updateNavBtns();
-  }
+  // Students
+  let studentsHtml='<ul>';
+  const sEntries=document.querySelectorAll('#studentsContainer .person-entry');
+  if(sEntries.length===0){studentsHtml+='<li>None listed</li>';}
+  sEntries.forEach(e=>{
+    const n=e.querySelector('.p-name')?.value||'';
+    const g=e.querySelector('.p-notes')?.value||'';
+    if(n) studentsHtml+=`<li><strong>${n}</strong>${g?' - '+g:''}</li>`;
+  });
+  studentsHtml+='</ul>';
 
-  function submitForm() {
-    const items = [
-      ['Event Type', document.getElementById('eventType').value || '—'],
-      ['Purpose', document.getElementById('eventPurpose').value || '—'],
-      ['Date', document.getElementById('eventDate').value || '—'],
-      ['Location', locationType === 'external' ? 'External / Donor-Hosted' : locationType === 'on-campus' ? 'On-Campus' : '—'],
-      ['Request Type', requestType ? requestType.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase()) : '—'],
-      ['Checklist', `${Object.values(checks).filter(Boolean).length} / ${Object.keys(checks).length} Complete`],
-    ];
-    document.getElementById('summaryGrid').innerHTML = items.map(([l, v]) =>
-      `<div class="summary-item"><div class="s-label">${l}</div><div class="s-value">${v}</div></div>`
-    ).join('');
-    document.getElementById('mainCard').style.display = 'none';
-    document.getElementById('submittedView').style.display = 'block';
-    document.getElementById('stepNav').style.display = 'none';
-    document.querySelector('.progress-track').style.display = 'none';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  // Timeline
+  const timelineHtml=timeline?'<ul>'+timeline.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>No timeline entered.</p>';
 
-  function resetForm() { location.reload(); }
+  // Gulliver attendees
+  const gulliverHtml=gulliverAttendees?'<ul>'+gulliverAttendees.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>None listed.</p>';
 
-  buildNav(); updateProgress(); updateNavBtns();
+  // BOT
+  const botAttendingHtml=botAttending?'<ul>'+botAttending.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>None listed.</p>';
+  const botUnableHtml=botUnable?'<ul>'+botUnable.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>None listed.</p>';
+
+  // Generated date
+  const genDate=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  const html=`
+    <div class="print-bar">
+      <span>Briefing Document Generated - ${genDate}</span>
+      <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+    <div class="briefing-doc">
+      <div class="brief-header">
+        <div class="bh-label">A2 Systems Architecture &nbsp;|&nbsp; Event Briefing Document</div>
+        <h1>${name}</h1>
+        <div class="bh-meta">
+          <strong>Date:</strong> ${dateStr}${time?' &nbsp;|&nbsp; <strong>Time:</strong> '+time:''}<br/>
+          <strong>Location:</strong> ${loc||'TBD'}<br/>
+          ${guestCap?'<strong>Guest Cap:</strong> '+guestCap+' &nbsp;|&nbsp; ':''}<strong>Total RSVPs:</strong> ${rsvpCount||'TBD'}
+          ${rsvpLink?'&nbsp;&nbsp;<a class="brief-link" href="'+rsvpLink+'" target="_blank">View Attendance</a>':''}
+        </div>
+      </div>
+
+      ${format||outcome?`
+      <div class="brief-section">
+        <div class="brief-section-title">Event Format &amp; Program Outcome</div>
+        <div class="brief-section-body">
+          ${format?'<p><strong>Format:</strong> '+format+'</p>':''}
+          ${outcome?'<p><strong>Program Outcome Strategy:</strong> '+outcome+'</p>':''}
+        </div>
+      </div>`:''}
+
+      <div class="brief-section">
+        <div class="brief-section-title">Event Timeline</div>
+        <div class="brief-section-body">${timelineHtml}</div>
+      </div>
+
+      <div class="brief-two-col">
+        <div class="brief-section">
+          <div class="brief-section-title">Prospects in the Room ($500k+)</div>
+          <div class="brief-section-body">${prospectsHtml}</div>
+        </div>
+        <div class="brief-section">
+          <div class="brief-section-title">Donors in the Room</div>
+          <div class="brief-section-body">${donorsHtml}</div>
+        </div>
+      </div>
+
+      <div class="brief-two-col">
+        <div class="brief-section">
+          <div class="brief-section-title">BOT in Attendance</div>
+          <div class="brief-section-body">${botAttendingHtml}</div>
+        </div>
+        <div class="brief-section">
+          <div class="brief-section-title">BOT Invited / Unable to Attend</div>
+          <div class="brief-section-body">${botUnableHtml}</div>
+        </div>
+      </div>
+
+      <div class="brief-section">
+        <div class="brief-section-title">Students Participating</div>
+        <div class="brief-section-body">${studentsHtml}</div>
+      </div>
+
+      <div class="brief-section">
+        <div class="brief-section-title">Gulliver Attendees</div>
+        <div class="brief-section-body">${gulliverHtml}</div>
+      </div>
+
+      ${invStrategy||constituents.length?`
+      <div class="brief-section">
+        <div class="brief-section-title">Advancement Invitation Strategy</div>
+        <div class="brief-section-body">
+          ${constituents.length?'<p><strong>Constituent Groups:</strong> '+constituents.join(', ')+'</p>':''}
+          ${invStrategy?'<p>'+invStrategy+'</p>':''}
+        </div>
+      </div>`:''}
+
+      ${talkingPoints||talkingPointsLink?`
+      <div class="brief-section">
+        <div class="brief-section-title">Suggested Talking Points</div>
+        <div class="brief-section-body">
+          ${talkingPointsLink?'<p><a class="brief-link" href="'+talkingPointsLink+'" target="_blank">View Full Talking Points Document</a></p>':''}
+          ${talkingPoints?'<p>'+talkingPoints.replace(/\n/g,'<br/>')+'</p>':''}
+        </div>
+      </div>`:''}
+
+      ${assets?`
+      <div class="brief-section">
+        <div class="brief-section-title">Assets &amp; Materials</div>
+        <div class="brief-section-body"><p>${assets.replace(/\n/g,'<br/>')}</p></div>
+      </div>`:''}
+
+      ${researchLink||botResearchLink?`
+      <div class="brief-section">
+        <div class="brief-section-title">Research Links</div>
+        <div class="brief-section-body">
+          ${researchLink?'<p><a class="brief-link" href="'+researchLink+'" target="_blank">Guest Research</a></p>':''}
+          ${botResearchLink?'<p><a class="brief-link" href="'+botResearchLink+'" target="_blank">BOT Research</a></p>':''}
+        </div>
+      </div>`:''}
+
+      ${notes?`
+      <div class="brief-section">
+        <div class="brief-section-title">Notes</div>
+        <div class="brief-section-body"><p>${notes.replace(/\n/g,'<br/>')}</p></div>
+      </div>`:''}
+
+      <div class="brief-footer">
+        <span><strong>A2 Systems Architecture LLC</strong> &nbsp;|&nbsp; Event Briefing Document &nbsp;|&nbsp; Confidential</span>
+        <span>Generated: ${genDate}</span>
+      </div>
+    </div>`;
+
+  const output=document.getElementById('briefingOutput');
+  output.innerHTML=html;
+  output.style.display='block';
+  output.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// =============================================
+// INIT
+// =============================================
+buildTables();
+checkDateAlert();
 </script>
 </body>
 </html>

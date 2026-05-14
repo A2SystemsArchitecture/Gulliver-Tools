@@ -7,72 +7,67 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --plum:#2D1B4E;--plum-mid:#3d2660;--plum-light:#4a2f75;
+  --plum:#2D1B4E;--plum-mid:#3d2660;
   --gold:#CA8A04;--gold-light:#e6a805;
   --cream:#FFFBEB;--lavender:#FAF5FF;
   --nearblack:#1C1917;--white:#fff;
   --muted:#6b6560;--border:#e2d9f3;--border2:#d4c9ee;
   --green:#166534;--green-bg:#f0fdf4;
-  --red:#991b1b;--red-bg:#fef2f2;
   --amber:#92400e;--amber-bg:#fffbeb;
 }
 body{background:var(--cream);color:var(--nearblack);font-family:Arial,sans-serif;min-height:100vh;padding:0 0 60px;}
-
 .top-bar{background:var(--plum);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid var(--gold);position:sticky;top:0;z-index:100;}
 .top-bar-left{display:flex;align-items:center;gap:12px;}
 .firm-badge{background:var(--gold);color:var(--plum);font-size:12px;font-weight:700;padding:5px 12px;letter-spacing:.5px;}
 .firm-name{color:var(--white);font-size:14px;font-weight:700;}
 .tool-label{color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
 .top-bar-right{color:rgba(255,255,255,.5);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;}
-
 .page{max-width:1100px;margin:0 auto;padding:32px 20px;}
-
 .alert-banner{display:none;padding:14px 18px;margin-bottom:24px;border-left:4px solid;font-size:13px;font-weight:700;}
 .alert-banner.amber{background:var(--amber-bg);border-color:var(--gold);color:var(--amber);}
 .alert-banner.green{background:var(--green-bg);border-color:#16a34a;color:var(--green);}
-
 .tab-nav{display:flex;border-bottom:2px solid var(--gold);margin-bottom:28px;overflow-x:auto;}
 .tab-btn{padding:12px 22px;background:transparent;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;color:var(--muted);cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;transition:all .2s;}
 .tab-btn:hover{color:var(--plum);}
 .tab-btn.active{color:var(--plum);border-bottom-color:var(--plum);background:var(--lavender);}
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
-
 .section-card{background:var(--white);border:1px solid var(--border);border-top:3px solid var(--plum);margin-bottom:20px;}
 .section-head{background:var(--plum);padding:12px 20px;display:flex;align-items:center;gap:10px;}
 .section-head h3{color:var(--white);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
 .s-num{background:var(--gold);color:var(--plum);width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
 .section-body{padding:20px;}
 .section-sub{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.5;}
-
 .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;}
 .field{margin-bottom:16px;}
 .field.wide{grid-column:1/-1;}
 label.fl{display:block;font-size:10px;color:var(--plum);font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px;}
-input[type=text],input[type=date],input[type=time],input[type=email],input[type=tel],input[type=number],input[type=url],select,textarea{
+input[type=text],input[type=date],input[type=time],input[type=email],input[type=tel],input[type=number],input[type=url],select{
   width:100%;background:var(--cream);border:1px solid var(--border2);border-radius:0;
   padding:9px 11px;color:var(--nearblack);font-family:Arial,sans-serif;font-size:13px;
   outline:none;transition:border-color .2s;appearance:none;}
-input:focus,select:focus,textarea:focus{border-color:var(--plum);background:var(--lavender);}
-textarea{resize:vertical;min-height:70px;}
+input:focus,select:focus{border-color:var(--plum);background:var(--lavender);}
 select{cursor:pointer;}
-
+textarea{
+  width:100%;background:var(--cream);border:1px solid var(--border2);border-radius:0;
+  padding:9px 11px;color:var(--nearblack);font-family:Arial,sans-serif;font-size:13px;
+  outline:none;transition:border-color .2s;
+  resize:none;overflow:hidden;min-height:40px;display:block;}
+textarea:focus{border-color:var(--plum);background:var(--lavender);}
 .gold-rule{height:2px;background:var(--gold);margin:18px 0;}
 .label-col{background:var(--plum);color:var(--white);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:6px 10px;display:inline-block;margin-bottom:12px;}
-
-.check-table{width:100%;border-collapse:collapse;font-size:12px;}
+.check-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;}
 .check-table th{background:var(--plum);color:var(--white);padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.8px;font-weight:700;}
-.check-table td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.check-table td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top;word-wrap:break-word;}
 .check-table tr:nth-child(even) td{background:var(--lavender);}
 .check-table tr:hover td{background:var(--cream);}
-.check-table select,.check-table input[type=text],.check-table input[type=date]{padding:5px 8px;font-size:12px;} .check-table td:last-child input[type=text]{white-space:normal;word-break:break-word;} .check-table td:last-child{min-width:180px;word-wrap:break-word;}
-
+.check-table select,.check-table input[type=text],.check-table input[type=date]{padding:5px 8px;font-size:12px;}
+.check-table textarea{font-size:12px;min-height:32px;padding:5px 8px;background:transparent;border:1px solid var(--border2);}
 .person-entry{background:var(--lavender);border:1px solid var(--border);padding:14px;margin-bottom:10px;position:relative;}
 .person-entry .remove-btn{position:absolute;top:10px;right:10px;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;}
 .person-entry .remove-btn:hover{color:#991b1b;}
 .add-btn{background:transparent;border:1px solid var(--plum);color:var(--plum);padding:8px 16px;cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;transition:all .2s;margin-top:6px;}
 .add-btn:hover{background:var(--plum);color:var(--white);}
-
 .generate-hero{background:var(--plum);padding:32px;text-align:center;margin-bottom:24px;}
 .generate-hero h2{color:var(--white);font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
 .generate-hero p{color:rgba(255,255,255,.7);font-size:13px;line-height:1.6;}
@@ -81,10 +76,12 @@ select{cursor:pointer;}
 .readiness-card .r-icon{font-size:22px;margin-bottom:6px;}
 .readiness-card .r-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;}
 .readiness-card .r-val{font-size:18px;font-weight:700;color:var(--plum);margin-top:4px;}
-.gen-btn{display:block;width:100%;background:var(--gold);border:none;color:var(--plum);padding:16px;cursor:pointer;font-family:Arial,sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:background .2s;margin-bottom:12px;}
+.gen-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.gen-btn{display:block;width:100%;background:var(--gold);border:none;color:var(--plum);padding:16px;cursor:pointer;font-family:Arial,sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:background .2s;}
 .gen-btn:hover{background:var(--gold-light);}
-.gen-note{font-size:12px;color:var(--muted);text-align:center;line-height:1.5;}
-
+.gen-btn.bot{background:var(--plum);color:var(--white);}
+.gen-btn.bot:hover{background:var(--plum-mid);}
+.gen-note{font-size:12px;color:var(--muted);text-align:center;line-height:1.5;margin-bottom:24px;}
 #briefingOutput{display:none;}
 .briefing-doc{background:var(--white);border:1px solid var(--border);border-top:4px solid var(--plum);padding:40px;}
 .brief-header{border-bottom:3px solid var(--gold);padding-bottom:18px;margin-bottom:24px;}
@@ -101,26 +98,30 @@ select{cursor:pointer;}
 .brief-link{color:var(--plum);font-weight:700;text-decoration:none;}
 .brief-link:hover{text-decoration:underline;}
 .brief-footer{margin-top:32px;padding-top:16px;border-top:2px solid var(--gold);display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
-.print-bar{background:var(--lavender);border:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.print-bar span{font-size:12px;color:var(--plum);font-weight:700;}
-.print-btn{background:var(--plum);border:none;color:var(--white);padding:9px 20px;cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;transition:background .2s;}
-.print-btn:hover{background:var(--plum-mid);}
-
+.action-bar{background:var(--lavender);border:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap;}
+.action-bar span{font-size:12px;color:var(--plum);font-weight:700;}
+.action-bar-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.action-btn{border:none;padding:9px 18px;cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;transition:all .2s;}
+.action-btn.print-btn{background:var(--plum);color:var(--white);}
+.action-btn.print-btn:hover{background:var(--plum-mid);}
+.action-btn.docx-btn{background:var(--gold);color:var(--plum);}
+.action-btn.docx-btn:hover{background:var(--gold-light);}
+.action-btn.close-btn{background:transparent;border:1px solid var(--border2);color:var(--muted);}
+.action-btn.close-btn:hover{border-color:var(--plum);color:var(--plum);}
 .site-footer{background:var(--plum);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;margin-top:40px;}
 .site-footer .fl{color:rgba(255,255,255,.6);font-size:10px;}
 .site-footer .fl strong{color:var(--gold);}
 .site-footer .fr{color:rgba(255,255,255,.4);font-size:10px;font-style:italic;}
 
 @media print{
-  .top-bar,.tab-nav,.print-bar,.generate-hero,.readiness-grid,.gen-btn,.gen-note,.site-footer,.alert-banner{display:none!important;}
-  #briefingOutput{display:block!important;}
-  .tab-panel{display:block!important;}
-  body{padding:0;}
-  .page{padding:0;max-width:100%;}
-  .briefing-doc{border:none;padding:20px;}
+  body *{visibility:hidden;}
+  #briefingOutput,#briefingOutput *{visibility:visible;}
+  #briefingOutput{position:absolute;top:0;left:0;width:100%;}
+  .action-bar{display:none!important;}
+  textarea{border:none!important;background:transparent!important;padding:0!important;}
 }
 @media(max-width:600px){
-  .field-grid,.brief-two-col,.readiness-grid{grid-template-columns:1fr;}
+  .field-grid,.brief-two-col,.readiness-grid,.gen-btn-row{grid-template-columns:1fr;}
   .field.wide{grid-column:1;}
   .top-bar{padding:12px 16px;}
   .page{padding:20px 12px;}
@@ -128,7 +129,6 @@ select{cursor:pointer;}
 </style>
 </head>
 <body>
-
 <div class="top-bar">
   <div class="top-bar-left">
     <div class="firm-badge">A2</div>
@@ -139,11 +139,8 @@ select{cursor:pointer;}
   </div>
   <div class="top-bar-right" id="eventNameDisplay">No Event Loaded</div>
 </div>
-
 <div class="page">
-
-  <div class="alert-banner amber" id="alertBanner"></div>
-
+  <div class="alert-banner" id="alertBanner"></div>
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab(0)">01 - Event Setup</button>
     <button class="tab-btn" onclick="switchTab(1)">02 - Guests &amp; Research</button>
@@ -151,164 +148,75 @@ select{cursor:pointer;}
     <button class="tab-btn" onclick="switchTab(3)">04 - Generate Briefing</button>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- TAB 1: EVENT SETUP -->
-  <!-- ============================================================ -->
+  <!-- TAB 1 -->
   <div class="tab-panel active" id="tab-0">
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">A</div><h3>Core Event Information</h3></div>
       <div class="section-body">
         <div class="field-grid">
-          <div class="field wide">
-            <label class="fl">Event Name *</label>
-            <input type="text" id="eventName" placeholder="Enter event name" oninput="updateDisplay()"/>
+          <div class="field wide"><label class="fl">Event Name *</label><input type="text" id="eventName" placeholder="Enter event name" oninput="updateDisplay()"/></div>
+          <div class="field"><label class="fl">Event Date *</label><input type="date" id="eventDate" onchange="checkDateAlert()"/></div>
+          <div class="field"><label class="fl">Event Time</label><input type="text" id="eventTime" placeholder="Enter event time"/></div>
+          <div class="field wide"><label class="fl">Location / Venue</label><input type="text" id="eventLocation" placeholder="Enter venue name and address"/></div>
+          <div class="field"><label class="fl">Event Type</label>
+            <select id="eventType"><option value="">Select type...</option><option>Fundraising</option><option>Donor Recognition / Thank-You</option><option>Engagement</option><option>Stewardship</option><option>Cultivation</option><option>Other</option></select>
           </div>
-          <div class="field">
-            <label class="fl">Event Date *</label>
-            <input type="date" id="eventDate" onchange="checkDateAlert()"/>
+          <div class="field"><label class="fl">Location Type</label>
+            <select id="locationType"><option value="">Select...</option><option>On-Campus (In-House)</option><option>External (Donor-Hosted)</option><option>External (Venue)</option></select>
           </div>
-          <div class="field">
-            <label class="fl">Event Time</label>
-            <input type="text" id="eventTime" placeholder="Enter event time"/>
-          </div>
-          <div class="field wide">
-            <label class="fl">Location / Venue</label>
-            <input type="text" id="eventLocation" placeholder="Enter venue name and address"/>
-          </div>
-          <div class="field">
-            <label class="fl">Event Type</label>
-            <select id="eventType">
-              <option value="">Select type...</option>
-              <option>Fundraising</option>
-              <option>Donor Recognition / Thank-You</option>
-              <option>Engagement</option>
-              <option>Stewardship</option>
-              <option>Cultivation</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="fl">Location Type</label>
-            <select id="locationType">
-              <option value="">Select...</option>
-              <option>On-Campus (In-House)</option>
-              <option>External (Donor-Hosted)</option>
-              <option>External (Venue)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="fl">Guest Cap</label>
-            <input type="number" id="guestCap" placeholder="Enter guest cap"/>
-          </div>
-          <div class="field">
-            <label class="fl">Current RSVP Count</label>
-            <input type="number" id="rsvpCount" placeholder="Enter current RSVP count"/>
-          </div>
+          <div class="field"><label class="fl">Guest Cap</label><input type="number" id="guestCap" placeholder="Enter guest cap"/></div>
+          <div class="field"><label class="fl">Current RSVP Count</label><input type="number" id="rsvpCount" placeholder="Enter current RSVP count"/></div>
         </div>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">B</div><h3>Event Format &amp; Program</h3></div>
       <div class="section-body">
         <div class="field-grid">
-          <div class="field wide">
-            <label class="fl">Event Format</label>
-            <input type="text" id="eventFormat" placeholder="Describe the event format"/>
-          </div>
-          <div class="field wide">
-            <label class="fl">Program Outcome Strategy</label>
-            <textarea id="programOutcome" placeholder="What is the goal of this event? What should guests leave thinking, feeling, or doing?"></textarea>
-          </div>
-          <div class="field wide">
-            <label class="fl">Event Timeline / Run of Show</label>
-            <textarea id="eventTimeline" rows="6" placeholder="Enter the minute-by-minute run of show"></textarea>
-          </div>
-          <div class="field wide">
-            <label class="fl">Leadership Speaking Notes / Remarks</label>
-            <textarea id="motherGooseRemarks" placeholder="Enter speaker remarks, speaking cues, or moderation notes"></textarea>
-          </div>
+          <div class="field wide"><label class="fl">Event Format</label><input type="text" id="eventFormat" placeholder="Describe the event format"/></div>
+          <div class="field wide"><label class="fl">Program Outcome Strategy</label><textarea id="programOutcome" placeholder="What is the goal of this event?" oninput="autoExpand(this)"></textarea></div>
+          <div class="field wide"><label class="fl">Event Timeline / Run of Show</label><textarea id="eventTimeline" placeholder="Enter the minute-by-minute run of show" oninput="autoExpand(this)"></textarea></div>
+          <div class="field wide"><label class="fl">Leadership Speaking Notes / Remarks</label><textarea id="leadershipRemarks" placeholder="Enter speaker remarks, speaking cues, or moderation notes" oninput="autoExpand(this)"></textarea></div>
         </div>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">C</div><h3>Key Dates</h3></div>
       <div class="section-body">
         <div class="field-grid">
-          <div class="field">
-            <label class="fl">Event Planning Meeting Date</label>
-            <input type="date" id="planningDate"/>
-          </div>
-          <div class="field">
-            <label class="fl">Briefing Date</label>
-            <input type="date" id="briefingDate"/>
-          </div>
-          <div class="field">
-            <label class="fl">Leadership Briefing Date</label>
-            <input type="date" id="leadershipBriefingDate"/>
-          </div>
-          <div class="field">
-            <label class="fl">BOT Briefing Date</label>
-            <input type="date" id="botBriefingDate"/>
-          </div>
-          <div class="field">
-            <label class="fl">Debrief Date</label>
-            <input type="date" id="debriefDate"/>
-          </div>
+          <div class="field"><label class="fl">Event Planning Meeting Date</label><input type="date" id="planningDate"/></div>
+          <div class="field"><label class="fl">Briefing Date</label><input type="date" id="briefingDate"/></div>
+          <div class="field"><label class="fl">Leadership Briefing Date</label><input type="date" id="leadershipBriefingDate"/></div>
+          <div class="field"><label class="fl">BOT Briefing Date</label><input type="date" id="botBriefingDate"/></div>
+          <div class="field"><label class="fl">Debrief Date</label><input type="date" id="debriefDate"/></div>
         </div>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">D</div><h3>Assets &amp; Materials</h3></div>
       <div class="section-body">
         <div class="field-grid">
-          <div class="field wide">
-            <label class="fl">Physical Assets / Materials at Event</label>
-            <textarea id="eventAssets" placeholder="List all physical materials, signage, collateral, and assets present at this event"></textarea>
-          </div>
-          <div class="field wide">
-            <label class="fl">Notes</label>
-            <textarea id="eventNotes" placeholder="Any other relevant notes about this event"></textarea>
-          </div>
+          <div class="field wide"><label class="fl">Physical Assets / Materials at Event</label><textarea id="eventAssets" placeholder="List all physical materials, signage, collateral, and assets present at this event" oninput="autoExpand(this)"></textarea></div>
+          <div class="field wide"><label class="fl">Notes</label><textarea id="eventNotes" placeholder="Any other relevant notes about this event" oninput="autoExpand(this)"></textarea></div>
         </div>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">E</div><h3>External Links</h3></div>
       <div class="section-body">
         <p class="section-sub">Paste system links here. They will appear as active links in the generated briefing document.</p>
         <div class="field-grid">
-          <div class="field">
-            <label class="fl">RSVP / Event Attendance Link</label>
-            <input type="url" id="rsvpLink" placeholder="https://"/>
-          </div>
-          <div class="field">
-            <label class="fl">Guest Research Link</label>
-            <input type="url" id="researchLink" placeholder="https://"/>
-          </div>
-          <div class="field">
-            <label class="fl">BOT Research Link</label>
-            <input type="url" id="botResearchLink" placeholder="https://"/>
-          </div>
-          <div class="field">
-            <label class="fl">Talking Points Link</label>
-            <input type="url" id="talkingPointsLink" placeholder="https://"/>
-          </div>
+          <div class="field"><label class="fl">RSVP / Event Attendance Link</label><input type="url" id="rsvpLink" placeholder="https://"/></div>
+          <div class="field"><label class="fl">Guest Research Link</label><input type="url" id="researchLink" placeholder="https://"/></div>
+          <div class="field"><label class="fl">BOT Research Link</label><input type="url" id="botResearchLink" placeholder="https://"/></div>
+          <div class="field"><label class="fl">Talking Points Link</label><input type="url" id="talkingPointsLink" placeholder="https://"/></div>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- ============================================================ -->
-  <!-- TAB 2: GUESTS & RESEARCH -->
-  <!-- ============================================================ -->
+  <!-- TAB 2 -->
   <div class="tab-panel" id="tab-1">
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">A</div><h3>Advancement Invitation Strategy</h3></div>
       <div class="section-body">
@@ -326,13 +234,9 @@ select{cursor:pointer;}
             <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="Alumni"/> Alumni</label>
           </div>
         </div>
-        <div class="field">
-          <label class="fl">Additional Invitation Strategy Notes</label>
-          <textarea id="invitationStrategy" placeholder="Describe the broader invitation strategy for this event"></textarea>
-        </div>
+        <div class="field"><label class="fl">Additional Invitation Strategy Notes</label><textarea id="invitationStrategy" placeholder="Describe the broader invitation strategy for this event" oninput="autoExpand(this)"></textarea></div>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">B</div><h3>Prospects in the Room ($500k+)</h3></div>
       <div class="section-body">
@@ -341,7 +245,6 @@ select{cursor:pointer;}
         <button class="add-btn" onclick="addPerson('prospectsContainer','prospect')">+ Add Prospect</button>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">C</div><h3>Donors in the Room</h3></div>
       <div class="section-body">
@@ -350,23 +253,15 @@ select{cursor:pointer;}
         <button class="add-btn" onclick="addPerson('donorsContainer','donor')">+ Add Donor</button>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">D</div><h3>BOT Attendance</h3></div>
       <div class="section-body">
         <div class="field-grid">
-          <div class="field wide">
-            <label class="fl">BOT Members Attending</label>
-            <textarea id="botAttending" placeholder="List each BOT member attending, one per line"></textarea>
-          </div>
-          <div class="field wide">
-            <label class="fl">BOT Members Invited but Unable to Attend</label>
-            <textarea id="botUnable" placeholder="List each BOT member, one per line"></textarea>
-          </div>
+          <div class="field wide"><label class="fl">BOT Members Attending</label><textarea id="botAttending" placeholder="List each BOT member attending, one per line" oninput="autoExpand(this)"></textarea></div>
+          <div class="field wide"><label class="fl">BOT Members Invited but Unable to Attend</label><textarea id="botUnable" placeholder="List each BOT member, one per line" oninput="autoExpand(this)"></textarea></div>
         </div>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">E</div><h3>Students Participating</h3></div>
       <div class="section-body">
@@ -375,101 +270,48 @@ select{cursor:pointer;}
         <button class="add-btn" onclick="addPerson('studentsContainer','student')">+ Add Student</button>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">F</div><h3>Staff Attendees</h3></div>
       <div class="section-body">
-        <div class="field">
-          <label class="fl">Staff Attending</label>
-          <textarea id="gulliverAttendees" placeholder="Enter staff names, one per line"></textarea>
-        </div>
+        <div class="field"><label class="fl">Staff Attending</label><textarea id="gulliverAttendees" placeholder="Enter staff names, one per line" oninput="autoExpand(this)"></textarea></div>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head"><div class="s-num">G</div><h3>Suggested Talking Points</h3></div>
       <div class="section-body">
-        <div class="field">
-          <label class="fl">Key Talking Points</label>
-          <textarea id="talkingPoints" rows="5" placeholder="Enter key talking points or an overview here. For the full document paste the link in Tab 1 Section E."></textarea>
-        </div>
+        <div class="field"><label class="fl">Key Talking Points</label><textarea id="talkingPoints" placeholder="Enter key talking points or an overview here." oninput="autoExpand(this)"></textarea></div>
       </div>
     </div>
-
   </div>
 
-  <!-- ============================================================ -->
-  <!-- TAB 3: CHECKLIST -->
-  <!-- ============================================================ -->
+  <!-- TAB 3 -->
   <div class="tab-panel" id="tab-2">
-
-    <div class="section-card">
-      <div class="section-head"><div class="s-num">1</div><h3>Event Owner Tasks</h3></div>
-      <div class="section-body" style="overflow-x:visible;">
-        <table class="check-table" id="tbl-owner"></table>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-head"><div class="s-num">2</div><h3>Data Team Tasks</h3></div>
-      <div class="section-body" style="overflow-x:visible;">
-        <table class="check-table" id="tbl-data"></table>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-head"><div class="s-num">3</div><h3>Communications Tasks</h3></div>
-      <div class="section-body" style="overflow-x:visible;">
-        <table class="check-table" id="tbl-comms"></table>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-head"><div class="s-num">4</div><h3>Events Manager Tasks</h3></div>
-      <div class="section-body" style="overflow-x:visible;">
-        <table class="check-table" id="tbl-events"></table>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-head"><div class="s-num">5</div><h3>Budget Tasks</h3></div>
-      <div class="section-body" style="overflow-x:visible;">
-        <table class="check-table" id="tbl-budget"></table>
-      </div>
-    </div>
-
-    <div class="section-card">
-      <div class="section-head"><div class="s-num">6</div><h3>Security &amp; Logistics Tasks</h3></div>
-      <div class="section-body" style="overflow-x:visible;">
-        <table class="check-table" id="tbl-security"></table>
-      </div>
-    </div>
-
+    <div class="section-card"><div class="section-head"><div class="s-num">1</div><h3>Event Owner Tasks</h3></div><div class="section-body"><table class="check-table" id="tbl-owner"></table></div></div>
+    <div class="section-card"><div class="section-head"><div class="s-num">2</div><h3>Data Team Tasks</h3></div><div class="section-body"><table class="check-table" id="tbl-data"></table></div></div>
+    <div class="section-card"><div class="section-head"><div class="s-num">3</div><h3>Communications Tasks</h3></div><div class="section-body"><table class="check-table" id="tbl-comms"></table></div></div>
+    <div class="section-card"><div class="section-head"><div class="s-num">4</div><h3>Events Manager Tasks</h3></div><div class="section-body"><table class="check-table" id="tbl-events"></table></div></div>
+    <div class="section-card"><div class="section-head"><div class="s-num">5</div><h3>Budget Tasks</h3></div><div class="section-body"><table class="check-table" id="tbl-budget"></table></div></div>
+    <div class="section-card"><div class="section-head"><div class="s-num">6</div><h3>Security &amp; Logistics Tasks</h3></div><div class="section-body"><table class="check-table" id="tbl-security"></table></div></div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- TAB 4: GENERATE BRIEFING -->
-  <!-- ============================================================ -->
+  <!-- TAB 4 -->
   <div class="tab-panel" id="tab-3">
-
     <div class="generate-hero">
       <h2>Generate Event Briefing Document</h2>
-      <p>Review readiness below. When your team is ready, click Generate to produce the printable briefing document based on everything entered across all tabs.</p>
+      <p>Review readiness below. Select which briefing to generate. Each button produces a separate clean output.</p>
     </div>
-
-    <div class="readiness-grid" id="readinessGrid">
+    <div class="readiness-grid">
       <div class="readiness-card"><div class="r-icon">📋</div><div class="r-label">Event Setup</div><div class="r-val" id="r-setup">—</div></div>
       <div class="readiness-card"><div class="r-icon">👥</div><div class="r-label">Guests Entered</div><div class="r-val" id="r-guests">—</div></div>
       <div class="readiness-card"><div class="r-icon">✓</div><div class="r-label">Checklist Complete</div><div class="r-val" id="r-checklist">—</div></div>
     </div>
-
-    <button class="gen-btn" id="genBtn" onclick="generateBriefing()">Generate Event Briefing Document</button>
-    <p class="gen-note">The briefing will appear below. Use your browser Print function (Ctrl+P / Cmd+P) to save as PDF or print.</p>
-    <div style="height:24px;"></div>
+    <div class="gen-btn-row">
+      <button class="gen-btn" onclick="generateBriefing('standard')">Generate Standard Event Briefing</button>
+      <button class="gen-btn bot" onclick="generateBriefing('bot')">Generate BOT Briefing Document</button>
+    </div>
+    <p class="gen-note">Standard Briefing includes all sections. BOT Briefing removes Leadership Speaking Points, Suggested Talking Points, Assets and Materials. BOT Research Link is retained in the BOT version.</p>
     <div id="briefingOutput"></div>
-
   </div>
-
 </div>
 
 <div class="site-footer">
@@ -478,198 +320,84 @@ select{cursor:pointer;}
 </div>
 
 <script>
-// =============================================
-// TAB SWITCHING
-// =============================================
 function switchTab(i){
   document.querySelectorAll('.tab-btn').forEach((b,idx)=>b.classList.toggle('active',idx===i));
   document.querySelectorAll('.tab-panel').forEach((p,idx)=>p.classList.toggle('active',idx===i));
-  if(i===3) updateReadiness();
+  if(i===3)updateReadiness();
 }
-
-// =============================================
-// DISPLAY & ALERT
-// =============================================
 function updateDisplay(){
   const n=document.getElementById('eventName').value;
   document.getElementById('eventNameDisplay').textContent=n||'No Event Loaded';
 }
-
 function checkDateAlert(){
   const d=document.getElementById('eventDate').value;
-  if(!d) return;
+  if(!d)return;
   const eventDay=new Date(d+'T00:00:00');
-  const today=new Date(); today.setHours(0,0,0,0);
+  const today=new Date();today.setHours(0,0,0,0);
   const diff=Math.round((eventDay-today)/(1000*60*60*24));
   const banner=document.getElementById('alertBanner');
-  if(diff<=2 && diff>=0){
-    banner.className='alert-banner amber';
-    banner.textContent='EVENT ALERT: This event is '+(diff===0?'TODAY':diff===1?'TOMORROW':'in 2 days')+'. The briefing document should be generated and distributed now.';
-    banner.style.display='block';
-  } else if(diff<0){
-    banner.className='alert-banner green';
-    banner.textContent='This event has already passed.';
-    banner.style.display='block';
-  } else {
-    banner.style.display='none';
-  }
+  if(diff<=2&&diff>=0){banner.className='alert-banner amber';banner.textContent='EVENT ALERT: This event is '+(diff===0?'TODAY':diff===1?'TOMORROW':'in 2 days')+'. The briefing document should be generated and distributed now.';banner.style.display='block';}
+  else if(diff<0){banner.className='alert-banner green';banner.textContent='This event has already passed.';banner.style.display='block';}
+  else{banner.style.display='none';}
 }
-
-// =============================================
-// PEOPLE ENTRIES
-// =============================================
-function addPerson(containerId, type){
+function autoExpand(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
+function addPerson(containerId,type){
   const c=document.getElementById(containerId);
   const div=document.createElement('div');
   div.className='person-entry';
-  div.dataset.type=type;
   let fields='';
-  if(type==='prospect'){
-    fields=`<div class="field-grid">
-      <div class="field"><label class="fl">Full Name</label><input type="text" class="p-name" placeholder="Enter full name"/></div>
-      <div class="field"><label class="fl">Assignment / Notes</label><input type="text" class="p-notes" placeholder="Enter assignment or notes"/></div>
-      <div class="field wide"><label class="fl">Research Link (optional)</label><input type="url" class="p-link" placeholder="https://"/></div>
-    </div>`;
-  } else if(type==='donor'){
-    fields=`<div class="field-grid">
-      <div class="field"><label class="fl">Full Name</label><input type="text" class="p-name" placeholder="Enter full name"/></div>
-      <div class="field"><label class="fl">Giving History / Notes</label><input type="text" class="p-notes" placeholder="Enter giving history or notes"/></div>
-      <div class="field wide"><label class="fl">Proposal / Notes Link (optional)</label><input type="url" class="p-link" placeholder="https://"/></div>
-    </div>`;
-  } else if(type==='student'){
-    fields=`<div class="field-grid">
-      <div class="field"><label class="fl">Student Name</label><input type="text" class="p-name" placeholder="Enter student name"/></div>
-      <div class="field"><label class="fl">Grade / Program</label><input type="text" class="p-notes" placeholder="Enter grade and program"/></div>
-    </div>`;
-  }
+  if(type==='prospect'){fields=`<div class="field-grid"><div class="field"><label class="fl">Full Name</label><input type="text" class="p-name" placeholder="Enter full name"/></div><div class="field"><label class="fl">Assignment / Notes</label><input type="text" class="p-notes" placeholder="Enter assignment or notes"/></div><div class="field wide"><label class="fl">Research Link (optional)</label><input type="url" class="p-link" placeholder="https://"/></div></div>`;}
+  else if(type==='donor'){fields=`<div class="field-grid"><div class="field"><label class="fl">Full Name</label><input type="text" class="p-name" placeholder="Enter full name"/></div><div class="field"><label class="fl">Giving History / Notes</label><input type="text" class="p-notes" placeholder="Enter giving history or notes"/></div><div class="field wide"><label class="fl">Proposal / Notes Link (optional)</label><input type="url" class="p-link" placeholder="https://"/></div></div>`;}
+  else if(type==='student'){fields=`<div class="field-grid"><div class="field"><label class="fl">Student Name</label><input type="text" class="p-name" placeholder="Enter student name"/></div><div class="field"><label class="fl">Grade / Program</label><input type="text" class="p-notes" placeholder="Enter grade and program"/></div></div>`;}
   div.innerHTML=`<button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>${fields}`;
   c.appendChild(div);
 }
-
-// =============================================
-// CHECKLIST TABLES
-// =============================================
 const CHECKLIST_DATA={
-  'tbl-owner':[
-    ['Event Purpose defined',''],
-    ['Event audience identified',''],
-    ['Talking points info relayed',''],
-    ['Event details shared with all teams',''],
-    ['Constituent groups confirmed',''],
-    ['Board needs identified',''],
-    ['Briefing requested',''],
-    ['Research doc / Briefing (Board version) sent',''],
-  ],
-  'tbl-data':[
-    ['Guest list built',''],
-    ['Guest list query approved','Leadership'],
-    ['Wealth screening completed',''],
-    ['Research completed',''],
-    ['Donor flags reviewed',''],
-    ['RSVP tracking validated',''],
-    ['Attendance report delivered',''],
-    ['Post-event notes uploaded',''],
-    ['Briefing document completed',''],
-  ],
-  'tbl-comms':[
-    ['Invite 1 sent','Communications Lead'],
-    ['Invite 2 sent','Communications Lead'],
-    ['Reminder 1 sent',''],
-    ['Reminder 2 sent',''],
-    ['See You Tomorrow email sent',''],
-    ['Follow-up email sent',''],
-    ['Included in Weekly (if needed)',''],
-    ['Social coverage arranged (if needed)',''],
-    ['Photographer confirmed',''],
-    ['Videographer confirmed',''],
-    ['Talking Points finalized',''],
-    ['Signage approved (all locations)',''],
-    ['Campaign assets confirmed',''],
-  ],
-  'tbl-events':[
-    ['Calendar hold sent','Events Manager'],
-    ['Event created in system',''],
-    ['Venue walkthrough completed',''],
-    ['Floor plan and vendor layout confirmed',''],
-    ['Minute-by-minute run of show finalized',''],
-    ['Staffing assignments confirmed',''],
-    ['Setup and breakdown coordinated',''],
-    ['On-site execution plan complete',''],
-    ['RSVPs managed and confirmed',''],
-    ['Name tags prepared',''],
-    ['Follow-up calls / texts for unconfirmed guests',''],
-    ['Host gift arranged',''],
-    ['Guest gift arranged',''],
-    ['Event form submitted for campus',''],
-    ['Work order submitted',''],
-    ['Catering request submitted',''],
-    ['Maintenance needs confirmed',''],
-    ['Maintenance schedule confirmed',''],
-  ],
-  'tbl-budget':[
-    ['Budget spreadsheet created',''],
-    ['Invoice processing (POs) initiated',''],
-    ['Budget tracking created',''],
-    ['Final budget reviewed',''],
-    ['In-kind gifts finalized',''],
-  ],
-  'tbl-security':[
-    ['Risk assessment completed',''],
-    ['Security needs confirmed',''],
-    ['Permits and parking approved',''],
-    ['Print research prepared for Leadership',''],
-    ['Final talking points approved',''],
-    ['Staffing lead for program confirmed',''],
-    ['Volunteer involvement confirmed',''],
-  ],
+  'tbl-owner':[['Event Purpose defined',''],['Event audience identified',''],['Talking points info relayed',''],['Event details shared with all teams',''],['Constituent groups confirmed',''],['Board needs identified',''],['Briefing requested',''],['Research doc / Briefing (Board version) sent','']],
+  'tbl-data':[['Guest list built',''],['Guest list query approved','Leadership'],['Wealth screening completed',''],['Research completed',''],['Donor flags reviewed',''],['RSVP tracking validated',''],['Attendance report delivered',''],['Post-event notes uploaded',''],['Briefing document completed','']],
+  'tbl-comms':[['Invite 1 sent','Communications Lead'],['Invite 2 sent','Communications Lead'],['Reminder 1 sent',''],['Reminder 2 sent',''],['See You Tomorrow email sent',''],['Follow-up email sent',''],['Included in Weekly (if needed)',''],['Social coverage arranged (if needed)',''],['Photographer confirmed',''],['Videographer confirmed',''],['Talking Points finalized',''],['Signage approved (all locations)',''],['Campaign assets confirmed','']],
+  'tbl-events':[['Calendar hold sent','Events Manager'],['Event created in system',''],['Venue walkthrough completed',''],['Floor plan and vendor layout confirmed',''],['Minute-by-minute run of show finalized',''],['Staffing assignments confirmed',''],['Setup and breakdown coordinated',''],['On-site execution plan complete',''],['RSVPs managed and confirmed',''],['Name tags prepared',''],['Follow-up calls / texts for unconfirmed guests',''],['Host gift arranged',''],['Guest gift arranged',''],['Event form submitted for campus',''],['Work order submitted',''],['Catering request submitted',''],['Maintenance needs confirmed',''],['Maintenance schedule confirmed','']],
+  'tbl-budget':[['Budget spreadsheet created',''],['Invoice processing (POs) initiated',''],['Budget tracking created',''],['Final budget reviewed',''],['In-kind gifts finalized','']],
+  'tbl-security':[['Risk assessment completed',''],['Security needs confirmed',''],['Permits and parking approved',''],['Print research prepared for Leadership',''],['Final talking points approved',''],['Staffing lead for program confirmed',''],['Volunteer involvement confirmed','']]
 };
-
 function buildTables(){
   Object.entries(CHECKLIST_DATA).forEach(([id,tasks])=>{
     const tbl=document.getElementById(id);
     tbl.innerHTML=`<thead><tr><th style="width:35%">Task</th><th style="width:15%">Owner</th><th style="width:12%">Status</th><th style="width:13%">Due Date</th><th style="width:25%">Notes</th></tr></thead><tbody></tbody>`;
     const tbody=tbl.querySelector('tbody');
-    tasks.forEach((t)=>{
+    tasks.forEach(t=>{
       const tr=document.createElement('tr');
-      tr.innerHTML=`
-        <td>${t[0]}</td>
-        <td><input type="text" value="${t[1]}" placeholder="Owner" style="min-width:100px"/></td>
-        <td>
-          <select>
-            <option value="todo">To Do</option>
-            <option value="inprog">In Progress</option>
-            <option value="done">Done</option>
-            <option value="na">N/A</option>
-          </select>
-        </td>
-        <td><input type="date"/></td>
-        <td><input type="text" placeholder="Notes" style="width:100%;white-space:normal;word-wrap:break-word;"/></td>`;
+      tr.innerHTML=`<td>${t[0]}</td><td><input type="text" value="${t[1]}" placeholder="Owner" style="width:100%"/></td><td><select style="width:100%"><option value="todo">To Do</option><option value="inprog">In Progress</option><option value="done">Done</option><option value="na">N/A</option></select></td><td><input type="date" style="width:100%"/></td><td><textarea oninput="autoExpand(this)" placeholder="Notes" style="width:100%"></textarea></td>`;
       tbody.appendChild(tr);
     });
   });
 }
-
-// =============================================
-// READINESS
-// =============================================
 function updateReadiness(){
   const name=document.getElementById('eventName').value;
   const date=document.getElementById('eventDate').value;
   const loc=document.getElementById('eventLocation').value;
-  const setupScore=[name,date,loc].filter(Boolean).length;
-  document.getElementById('r-setup').textContent=setupScore===3?'Ready':setupScore+'/3 Fields';
-  const prospects=document.getElementById('prospectsContainer').children.length;
-  const donors=document.getElementById('donorsContainer').children.length;
-  document.getElementById('r-guests').textContent=(prospects+donors)+' People';
+  const s=[name,date,loc].filter(Boolean).length;
+  document.getElementById('r-setup').textContent=s===3?'Ready':s+'/3 Fields';
+  const p=document.getElementById('prospectsContainer').children.length;
+  const d=document.getElementById('donorsContainer').children.length;
+  document.getElementById('r-guests').textContent=(p+d)+' People';
   let done=0,total=0;
   document.querySelectorAll('.check-table select').forEach(s=>{total++;if(s.value==='done')done++;});
   document.getElementById('r-checklist').textContent=total>0?(done+'/'+total):'0 tasks';
 }
-
-// =============================================
-// GENERATE BRIEFING
-// =============================================
-function generateBriefing(){
+function toList(v){return v?'<ul>'+v.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>None listed.</p>';}
+function buildList(entries){
+  if(entries.length===0)return'<ul><li>None identified</li></ul>';
+  let html='<ul>';
+  entries.forEach(e=>{
+    const n=e.querySelector('.p-name')?.value||'';
+    const no=e.querySelector('.p-notes')?.value||'';
+    const lk=e.querySelector('.p-link')?.value||'';
+    if(n)html+=`<li><strong>${n}</strong>${no?' - '+no:''}${lk?' <a class="brief-link" href="'+lk+'" target="_blank">[Link]</a>':''}</li>`;
+  });
+  return html+'</ul>';
+}
+function generateBriefing(type){
   const name=document.getElementById('eventName').value||'[Event Name]';
   const date=document.getElementById('eventDate').value;
   const time=document.getElementById('eventTime').value||'';
@@ -677,7 +405,7 @@ function generateBriefing(){
   const format=document.getElementById('eventFormat').value||'';
   const outcome=document.getElementById('programOutcome').value||'';
   const timeline=document.getElementById('eventTimeline').value||'';
-  const motherGoose=document.getElementById('motherGooseRemarks').value||'';
+  const leadership=document.getElementById('leadershipRemarks').value||'';
   const assets=document.getElementById('eventAssets').value||'';
   const notes=document.getElementById('eventNotes').value||'';
   const rsvpCount=document.getElementById('rsvpCount').value||'';
@@ -690,51 +418,33 @@ function generateBriefing(){
   const invStrategy=document.getElementById('invitationStrategy').value||'';
   const botAttending=document.getElementById('botAttending').value||'';
   const botUnable=document.getElementById('botUnable').value||'';
-  const gulliverAttendees=document.getElementById('gulliverAttendees').value||'';
+  const staffAttendees=document.getElementById('gulliverAttendees').value||'';
   const constituents=[...document.querySelectorAll('#constituentGroup input:checked')].map(c=>c.value);
-
   let dateStr=date;
   if(date){const d=new Date(date+'T00:00:00');dateStr=d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
-
-  const buildList=(entries,type)=>{
-    let html='<ul>';
-    if(entries.length===0) return '<ul><li>None identified</li></ul>';
-    entries.forEach(e=>{
-      const n=e.querySelector('.p-name')?.value||'';
-      const notes=e.querySelector('.p-notes')?.value||'';
-      const link=e.querySelector('.p-link')?.value||'';
-      if(n) html+=`<li><strong>${n}</strong>${notes?' - '+notes:''}${link?' <a class="brief-link" href="'+link+'" target="_blank">[Link]</a>':''}</li>`;
-    });
-    return html+'</ul>';
-  };
-
-  const prospectsHtml=buildList([...document.querySelectorAll('#prospectsContainer .person-entry')],'prospect');
-  const donorsHtml=buildList([...document.querySelectorAll('#donorsContainer .person-entry')],'donor');
-
+  const prospectsHtml=buildList([...document.querySelectorAll('#prospectsContainer .person-entry')]);
+  const donorsHtml=buildList([...document.querySelectorAll('#donorsContainer .person-entry')]);
   let studentsHtml='<ul>';
-  const sEntries=[...document.querySelectorAll('#studentsContainer .person-entry')];
-  if(sEntries.length===0){studentsHtml+='<li>None listed</li>';}
-  sEntries.forEach(e=>{
-    const n=e.querySelector('.p-name')?.value||'';
-    const g=e.querySelector('.p-notes')?.value||'';
-    if(n) studentsHtml+=`<li><strong>${n}</strong>${g?' - '+g:''}</li>`;
-  });
+  const sE=[...document.querySelectorAll('#studentsContainer .person-entry')];
+  if(sE.length===0){studentsHtml+='<li>None listed</li>';}
+  sE.forEach(e=>{const n=e.querySelector('.p-name')?.value||'';const g=e.querySelector('.p-notes')?.value||'';if(n)studentsHtml+=`<li><strong>${n}</strong>${g?' - '+g:''}</li>`;});
   studentsHtml+='</ul>';
-
-  const timelineHtml=timeline?'<ul>'+timeline.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>No timeline entered.</p>';
-  const gulliverHtml=gulliverAttendees?'<ul>'+gulliverAttendees.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>None listed.</p>';
-  const botAttendingHtml=botAttending?'<ul>'+botAttending.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>None listed.</p>';
-  const botUnableHtml=botUnable?'<ul>'+botUnable.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>None listed.</p>';
   const genDate=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const isBot=type==='bot';
+  const docLabel=isBot?'BOT Briefing Document':'Event Briefing Document';
 
   const html=`
-    <div class="print-bar">
-      <span>Briefing Document Generated - ${genDate}</span>
-      <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+    <div class="action-bar">
+      <span>${docLabel} — Generated ${genDate}</span>
+      <div class="action-bar-btns">
+        <button class="action-btn print-btn" onclick="window.print()">Print / Save as PDF</button>
+        <button class="action-btn docx-btn" onclick="downloadDocx()">Download as Word (.docx)</button>
+        <button class="action-btn close-btn" onclick="closeBriefing()">Close</button>
+      </div>
     </div>
-    <div class="briefing-doc">
+    <div class="briefing-doc" id="briefingDoc">
       <div class="brief-header">
-        <div class="bh-label">A2 Systems Architecture &nbsp;|&nbsp; Event Briefing Document</div>
+        <div class="bh-label">A2 Systems Architecture &nbsp;|&nbsp; ${docLabel}</div>
         <h1>${name}</h1>
         <div class="bh-meta">
           <strong>Date:</strong> ${dateStr}${time?' &nbsp;|&nbsp; <strong>Time:</strong> '+time:''}<br/>
@@ -744,99 +454,37 @@ function generateBriefing(){
         </div>
       </div>
 
-      ${format||outcome?`
-      <div class="brief-section">
-        <div class="brief-section-title">Event Format &amp; Program Outcome</div>
-        <div class="brief-section-body">
-          ${format?'<p><strong>Format:</strong> '+format+'</p>':''}
-          ${outcome?'<p><strong>Program Outcome Strategy:</strong> '+outcome+'</p>':''}
-        </div>
-      </div>`:''}
+      ${format||outcome?`<div class="brief-section"><div class="brief-section-title">Event Format &amp; Program Outcome</div><div class="brief-section-body">${format?'<p><strong>Format:</strong> '+format+'</p>':''}${outcome?'<p><strong>Program Outcome Strategy:</strong> '+outcome+'</p>':''}</div></div>`:''}
 
-      <div class="brief-section">
-        <div class="brief-section-title">Event Timeline</div>
-        <div class="brief-section-body">${timelineHtml}</div>
-      </div>
+      <div class="brief-section"><div class="brief-section-title">Event Timeline</div><div class="brief-section-body">${toList(timeline)}</div></div>
 
-      ${motherGoose?`
-      <div class="brief-section">
-        <div class="brief-section-title">Leadership Speaking Notes</div>
-        <div class="brief-section-body"><p>${motherGoose.replace(/\n/g,'<br/>')}</p></div>
-      </div>`:''}
+      ${!isBot&&leadership?`<div class="brief-section"><div class="brief-section-title">Leadership Speaking Notes</div><div class="brief-section-body"><p>${leadership.replace(/\n/g,'<br/>')}</p></div></div>`:''}
 
       <div class="brief-two-col">
-        <div class="brief-section">
-          <div class="brief-section-title">Prospects in the Room ($500k+)</div>
-          <div class="brief-section-body">${prospectsHtml}</div>
-        </div>
-        <div class="brief-section">
-          <div class="brief-section-title">Donors in the Room</div>
-          <div class="brief-section-body">${donorsHtml}</div>
-        </div>
+        <div class="brief-section"><div class="brief-section-title">Prospects in the Room ($500k+)</div><div class="brief-section-body">${prospectsHtml}</div></div>
+        <div class="brief-section"><div class="brief-section-title">Donors in the Room</div><div class="brief-section-body">${donorsHtml}</div></div>
       </div>
 
       <div class="brief-two-col">
-        <div class="brief-section">
-          <div class="brief-section-title">BOT in Attendance</div>
-          <div class="brief-section-body">${botAttendingHtml}</div>
-        </div>
-        <div class="brief-section">
-          <div class="brief-section-title">BOT Invited / Unable to Attend</div>
-          <div class="brief-section-body">${botUnableHtml}</div>
-        </div>
+        <div class="brief-section"><div class="brief-section-title">BOT in Attendance</div><div class="brief-section-body">${toList(botAttending)}</div></div>
+        <div class="brief-section"><div class="brief-section-title">BOT Invited / Unable to Attend</div><div class="brief-section-body">${toList(botUnable)}</div></div>
       </div>
 
-      <div class="brief-section">
-        <div class="brief-section-title">Students Participating</div>
-        <div class="brief-section-body">${studentsHtml}</div>
-      </div>
+      <div class="brief-section"><div class="brief-section-title">Students Participating</div><div class="brief-section-body">${studentsHtml}</div></div>
+      <div class="brief-section"><div class="brief-section-title">Staff Attendees</div><div class="brief-section-body">${toList(staffAttendees)}</div></div>
 
-      <div class="brief-section">
-        <div class="brief-section-title">Staff Attendees</div>
-        <div class="brief-section-body">${gulliverHtml}</div>
-      </div>
+      ${invStrategy||constituents.length?`<div class="brief-section"><div class="brief-section-title">Advancement Invitation Strategy</div><div class="brief-section-body">${constituents.length?'<p><strong>Constituent Groups:</strong> '+constituents.join(', ')+'</p>':''}${invStrategy?'<p>'+invStrategy+'</p>':''}</div></div>`:''}
 
-      ${invStrategy||constituents.length?`
-      <div class="brief-section">
-        <div class="brief-section-title">Advancement Invitation Strategy</div>
-        <div class="brief-section-body">
-          ${constituents.length?'<p><strong>Constituent Groups:</strong> '+constituents.join(', ')+'</p>':''}
-          ${invStrategy?'<p>'+invStrategy+'</p>':''}
-        </div>
-      </div>`:''}
+      ${!isBot&&(talkingPoints||talkingPointsLink)?`<div class="brief-section"><div class="brief-section-title">Suggested Talking Points</div><div class="brief-section-body">${talkingPointsLink?'<p><a class="brief-link" href="'+talkingPointsLink+'" target="_blank">View Full Talking Points Document</a></p>':''}${talkingPoints?'<p>'+talkingPoints.replace(/\n/g,'<br/>')+'</p>':''}</div></div>`:''}
 
-      ${talkingPoints||talkingPointsLink?`
-      <div class="brief-section">
-        <div class="brief-section-title">Suggested Talking Points</div>
-        <div class="brief-section-body">
-          ${talkingPointsLink?'<p><a class="brief-link" href="'+talkingPointsLink+'" target="_blank">View Full Talking Points Document</a></p>':''}
-          ${talkingPoints?'<p>'+talkingPoints.replace(/\n/g,'<br/>')+'</p>':''}
-        </div>
-      </div>`:''}
+      ${!isBot&&assets?`<div class="brief-section"><div class="brief-section-title">Assets &amp; Materials</div><div class="brief-section-body"><p>${assets.replace(/\n/g,'<br/>')}</p></div></div>`:''}
 
-      ${assets?`
-      <div class="brief-section">
-        <div class="brief-section-title">Assets &amp; Materials</div>
-        <div class="brief-section-body"><p>${assets.replace(/\n/g,'<br/>')}</p></div>
-      </div>`:''}
+      ${(isBot&&botResearchLink)||(!isBot&&(researchLink||botResearchLink))?`<div class="brief-section"><div class="brief-section-title">Research Links</div><div class="brief-section-body">${!isBot&&researchLink?'<p><a class="brief-link" href="'+researchLink+'" target="_blank">Guest Research</a></p>':''}${botResearchLink?'<p><a class="brief-link" href="'+botResearchLink+'" target="_blank">BOT Research</a></p>':''}</div></div>`:''}
 
-      ${researchLink||botResearchLink?`
-      <div class="brief-section">
-        <div class="brief-section-title">Research Links</div>
-        <div class="brief-section-body">
-          ${researchLink?'<p><a class="brief-link" href="'+researchLink+'" target="_blank">Guest Research</a></p>':''}
-          ${botResearchLink?'<p><a class="brief-link" href="'+botResearchLink+'" target="_blank">BOT Research</a></p>':''}
-        </div>
-      </div>`:''}
-
-      ${notes?`
-      <div class="brief-section">
-        <div class="brief-section-title">Notes</div>
-        <div class="brief-section-body"><p>${notes.replace(/\n/g,'<br/>')}</p></div>
-      </div>`:''}
+      ${notes?`<div class="brief-section"><div class="brief-section-title">Notes</div><div class="brief-section-body"><p>${notes.replace(/\n/g,'<br/>')}</p></div></div>`:''}
 
       <div class="brief-footer">
-        <span><strong>A2 Systems Architecture LLC</strong> &nbsp;|&nbsp; Event Briefing Document &nbsp;|&nbsp; Confidential</span>
+        <span><strong>A2 Systems Architecture LLC</strong> &nbsp;|&nbsp; ${docLabel} &nbsp;|&nbsp; Confidential</span>
         <span>Generated: ${genDate}</span>
       </div>
     </div>`;
@@ -846,10 +494,25 @@ function generateBriefing(){
   output.style.display='block';
   output.scrollIntoView({behavior:'smooth',block:'start'});
 }
-
-// =============================================
-// INIT
-// =============================================
+function closeBriefing(){
+  const o=document.getElementById('briefingOutput');
+  o.innerHTML='';o.style.display='none';
+}
+function downloadDocx(){
+  const doc=document.getElementById('briefingDoc');
+  if(!doc)return;
+  const content=doc.innerHTML;
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"/><title>Event Briefing</title><style>body{font-family:Arial,sans-serif;font-size:12pt;color:#1C1917;}h1{font-size:18pt;color:#2D1B4E;}table{border-collapse:collapse;width:100%;}td,th{border:1px solid #ccc;padding:6pt;}ul{margin:0;padding-left:16pt;}li{margin-bottom:4pt;}.brief-section-title{background:#2D1B4E;color:#fff;padding:6pt;font-size:10pt;text-transform:uppercase;}.brief-footer{font-size:9pt;color:#666;border-top:1pt solid #CA8A04;margin-top:16pt;padding-top:8pt;display:flex;justify-content:space-between;}.brief-header{border-bottom:2pt solid #CA8A04;padding-bottom:12pt;margin-bottom:16pt;}.bh-label{font-size:9pt;color:#CA8A04;text-transform:uppercase;letter-spacing:1pt;}.bh-meta{font-size:10pt;color:#6b6560;margin-top:6pt;line-height:1.8;}.brief-two-col{display:grid;grid-template-columns:1fr 1fr;gap:12pt;}.brief-link{color:#2D1B4E;font-weight:700;}</style></head><body>${content}</body></html>`;
+  const blob=new Blob(['\ufeff',html],{type:'application/msword'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='Event-Briefing.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 buildTables();
 checkDateAlert();
 </script>

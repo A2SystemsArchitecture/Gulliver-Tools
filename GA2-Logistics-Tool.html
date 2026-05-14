@@ -226,8 +226,8 @@ select{cursor:pointer;}
             <textarea id="eventTimeline" rows="6" placeholder="Enter the minute-by-minute run of show"></textarea>
           </div>
           <div class="field wide">
-            <label class="fl">Mother Goose Speaking Notes / Remarks</label>
-            <textarea id="motherGooseRemarks" placeholder="Enter Mother Goose remarks, speaking cues, or moderation notes"></textarea>
+            <label class="fl">Leadership Speaking Notes / Remarks</label>
+            <textarea id="motherGooseRemarks" placeholder="Enter speaker remarks, speaking cues, or moderation notes"></textarea>
           </div>
         </div>
       </div>
@@ -381,7 +381,7 @@ select{cursor:pointer;}
       <div class="section-body">
         <div class="field">
           <label class="fl">Staff Attending</label>
-          <textarea id="gulliverAttendees" placeholder="Cinderella&#10;Rumpelstiltskin&#10;The Big Bad Wolf"></textarea>
+          <textarea id="gulliverAttendees" placeholder="Enter staff names, one per line"></textarea>
         </div>
       </div>
     </div>
@@ -760,7 +760,7 @@ function generateBriefing(){
 
       ${motherGoose?`
       <div class="brief-section">
-        <div class="brief-section-title">Mother Goose Speaking Notes</div>
+        <div class="brief-section-title">Leadership Speaking Notes</div>
         <div class="brief-section-body"><p>${motherGoose.replace(/\n/g,'<br/>')}</p></div>
       </div>`:''}
 

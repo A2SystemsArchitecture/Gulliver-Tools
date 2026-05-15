@@ -24,7 +24,10 @@ body{background:var(--cream);color:var(--nearblack);font-family:Arial,sans-serif
 .firm-badge{background:var(--gold);color:var(--plum);font-size:12px;font-weight:700;padding:5px 12px;letter-spacing:.5px;}
 .firm-name{color:var(--white);font-size:14px;font-weight:700;}
 .tool-label{color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
-.top-bar-right{color:rgba(255,255,255,.5);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;}
+.top-bar-right{display:flex;align-items:center;gap:16px;}
+.event-name-display{color:rgba(255,255,255,.5);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;}
+.new-event-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:7px 16px;cursor:pointer;font-family:Arial,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .2s;white-space:nowrap;}
+.new-event-btn:hover{background:var(--gold);color:var(--plum);}
 .page{max-width:1100px;margin:0 auto;padding:32px 20px;}
 .alert-banner{display:none;padding:14px 18px;margin-bottom:24px;border-left:4px solid;font-size:13px;font-weight:700;}
 .alert-banner.amber{background:var(--amber-bg);border-color:var(--gold);color:var(--amber);}
@@ -115,6 +118,20 @@ textarea:focus{border-color:var(--plum);background:var(--lavender);}
 .site-footer .fl strong{color:var(--gold);}
 .site-footer .fr{color:rgba(255,255,255,.4);font-size:10px;font-style:italic;}
 
+/* Modal overlay for New Event confirmation */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(45,27,78,.7);z-index:999;align-items:center;justify-content:center;}
+.modal-overlay.active{display:flex;}
+.modal-box{background:var(--white);border-top:4px solid var(--gold);padding:32px;max-width:460px;width:90%;position:relative;}
+.modal-box h3{color:var(--plum);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.modal-box p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
+.modal-box .fl{display:block;font-size:10px;color:var(--plum);font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;}
+.modal-box input[type=text]{width:100%;margin-bottom:20px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+.modal-confirm-btn{background:var(--gold);border:none;color:var(--plum);padding:10px 22px;cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;transition:background .2s;}
+.modal-confirm-btn:hover{background:var(--gold-light);}
+.modal-cancel-btn{background:transparent;border:1px solid var(--border2);color:var(--muted);padding:10px 22px;cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;transition:all .2s;}
+.modal-cancel-btn:hover{border-color:var(--plum);color:var(--plum);}
+
 @media print{
   body *{visibility:hidden;}
   #briefingOutput,#briefingOutput *{visibility:visible;}
@@ -125,12 +142,28 @@ textarea:focus{border-color:var(--plum);background:var(--lavender);}
   .field-grid,.brief-two-col,.readiness-grid,.gen-btn-row{grid-template-columns:1fr;}
   .field.wide{grid-column:1;}
   .top-bar{padding:12px 16px;}
+  .top-bar-right{gap:10px;}
+  .new-event-btn{font-size:9px;padding:6px 10px;}
   .page{padding:20px 12px;}
   .demo-banner{padding:10px 16px;flex-wrap:wrap;}
 }
 </style>
 </head>
 <body>
+
+<!-- NEW EVENT MODAL -->
+<div class="modal-overlay" id="newEventModal">
+  <div class="modal-box">
+    <h3>Start a New Event File</h3>
+    <p>A blank copy of this tool will be downloaded to your computer as a standalone HTML file — ready for the next event. Your current work on this page is not affected.</p>
+    <label class="fl" for="newEventNameInput">New Event Name (used for the filename)</label>
+    <input type="text" id="newEventNameInput" placeholder="e.g. Spring Gala 2027" />
+    <div class="modal-actions">
+      <button class="modal-cancel-btn" onclick="closeNewEventModal()">Cancel</button>
+      <button class="modal-confirm-btn" onclick="downloadNewEventFile()">Download New Event File</button>
+    </div>
+  </div>
+</div>
 
 <div class="demo-banner">
   <div class="demo-badge">Sample Event</div>
@@ -146,7 +179,10 @@ textarea:focus{border-color:var(--plum);background:var(--lavender);}
       <div class="tool-label">GA2 Event Platform</div>
     </div>
   </div>
-  <div class="top-bar-right" id="eventNameDisplay">An Evening for the Future</div>
+  <div class="top-bar-right">
+    <div class="event-name-display" id="eventNameDisplay">An Evening for the Future</div>
+    <button class="new-event-btn" onclick="openNewEventModal()">+ New Event File</button>
+  </div>
 </div>
 
 <div class="page">
@@ -353,15 +389,20 @@ Naming opportunities remain available in the performing arts wing and three acad
 </div>
 
 <script>
+/* ── TAB NAVIGATION ── */
 function switchTab(i){
   document.querySelectorAll('.tab-btn').forEach((b,idx)=>b.classList.toggle('active',idx===i));
   document.querySelectorAll('.tab-panel').forEach((p,idx)=>p.classList.toggle('active',idx===i));
   if(i===3)updateReadiness();
 }
+
+/* ── DISPLAY ── */
 function updateDisplay(){
   const n=document.getElementById('eventName').value;
   document.getElementById('eventNameDisplay').textContent=n||'No Event Loaded';
 }
+
+/* ── DATE ALERT ── */
 function checkDateAlert(){
   const d=document.getElementById('eventDate').value;
   if(!d)return;
@@ -373,7 +414,11 @@ function checkDateAlert(){
   else if(diff<0){banner.className='alert-banner green';banner.textContent='This event has already passed.';banner.style.display='block';}
   else{banner.style.display='none';}
 }
+
+/* ── TEXTAREA AUTO-EXPAND ── */
 function autoExpand(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
+
+/* ── PERSON ENTRIES ── */
 function addPerson(containerId,type){
   const c=document.getElementById(containerId);
   const div=document.createElement('div');
@@ -385,6 +430,8 @@ function addPerson(containerId,type){
   div.innerHTML=`<button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">×</button>${fields}`;
   c.appendChild(div);
 }
+
+/* ── CHECKLIST TABLES ── */
 const CHECKLIST_DATA={
   'tbl-owner':[
     ['Event Purpose defined','Event Owner','done','2026-08-20','Confirmed fundraising and cultivation'],
@@ -470,14 +517,17 @@ function buildTables(){
       tbody.appendChild(tr);
     });
   });
-  // auto-expand all pre-filled textareas
   setTimeout(()=>{document.querySelectorAll('textarea').forEach(t=>autoExpand(t));},100);
 }
+
+/* ── READINESS ── */
 function updateReadiness(){
   let done=0,total=0;
   document.querySelectorAll('.check-table select').forEach(s=>{total++;if(s.value==='done')done++;});
   document.getElementById('r-checklist').textContent=total>0?(done+'/'+total):'—';
 }
+
+/* ── SAMPLE PEOPLE ── */
 function loadSamplePeople(){
   const prospects=[
     ['Thomas and Rebecca Harrington','Assigned to Board Chair outreach - top priority','https://research.sample-system.com/prospect-profile'],
@@ -515,6 +565,8 @@ function loadSamplePeople(){
     c.appendChild(div);
   });
 }
+
+/* ── BRIEFING GENERATION ── */
 function toList(v){return v?'<ul>'+v.split('\n').filter(l=>l.trim()).map(l=>`<li>${l}</li>`).join('')+'</ul>':'<p>None listed.</p>';}
 function buildList(entries){
   if(entries.length===0)return'<ul><li>None identified</li></ul>';
@@ -627,6 +679,116 @@ function downloadDocx(){
   document.body.appendChild(a);a.click();
   document.body.removeChild(a);URL.revokeObjectURL(url);
 }
+
+/* ══════════════════════════════════════════
+   NEW EVENT FILE — MODAL + DOWNLOAD
+   The downloaded file is a blank version of
+   the live tool (GA2-Logistics-Tool.html),
+   NOT a copy of this demo. All sample data
+   is stripped; the demo banner is removed.
+   ══════════════════════════════════════════ */
+function openNewEventModal(){
+  document.getElementById('newEventNameInput').value='';
+  document.getElementById('newEventModal').classList.add('active');
+  setTimeout(()=>document.getElementById('newEventNameInput').focus(),100);
+}
+function closeNewEventModal(){
+  document.getElementById('newEventModal').classList.remove('active');
+}
+document.getElementById('newEventModal').addEventListener('click',function(e){
+  if(e.target===this)closeNewEventModal();
+});
+document.getElementById('newEventNameInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter')downloadNewEventFile();
+  if(e.key==='Escape')closeNewEventModal();
+});
+
+function downloadNewEventFile(){
+  const rawName=document.getElementById('newEventNameInput').value.trim();
+  const eventLabel=rawName||'New Event';
+  const safeFileName=eventLabel.replace(/[^a-z0-9\-_\s]/gi,'').trim().replace(/\s+/g,'-');
+  const fileName='GA2-Event-'+safeFileName+'.html';
+
+  // Parse the current document
+  const parser=new DOMParser();
+  const newDoc=parser.parseFromString(document.documentElement.outerHTML,'text/html');
+
+  // ── Remove the demo banner entirely ──
+  const demoBanner=newDoc.querySelector('.demo-banner');
+  if(demoBanner)demoBanner.remove();
+
+  // ── Fix top-bar sticky position (was offset for demo banner) ──
+  const topBar=newDoc.querySelector('.top-bar');
+  if(topBar)topBar.style.top='0';
+
+  // ── Clear all input values ──
+  newDoc.querySelectorAll('input[type=text],input[type=number],input[type=url],input[type=date],input[type=time]').forEach(el=>{
+    el.value='';el.removeAttribute('value');
+  });
+
+  // ── Reset selects to first option ──
+  newDoc.querySelectorAll('select').forEach(el=>{
+    el.selectedIndex=0;
+    [...el.options].forEach(o=>o.removeAttribute('selected'));
+  });
+
+  // ── Clear textareas (including pre-filled sample data) ──
+  newDoc.querySelectorAll('textarea').forEach(el=>{
+    el.value='';el.textContent='';
+  });
+
+  // ── Uncheck all checkboxes ──
+  newDoc.querySelectorAll('input[type=checkbox]').forEach(el=>{
+    el.checked=false;el.removeAttribute('checked');
+  });
+
+  // ── Remove dynamically added person entries ──
+  ['prospectsContainer','donorsContainer','studentsContainer'].forEach(id=>{
+    const c=newDoc.getElementById(id);
+    if(c)c.innerHTML='';
+  });
+
+  // ── Hide briefing output ──
+  const bo=newDoc.getElementById('briefingOutput');
+  if(bo){bo.innerHTML='';bo.style.display='none';}
+
+  // ── Hide alert banner ──
+  const ab=newDoc.getElementById('alertBanner');
+  if(ab){ab.style.display='none';ab.textContent='';}
+
+  // ── Reset top bar event name display ──
+  const nd=newDoc.getElementById('eventNameDisplay');
+  if(nd)nd.textContent='No Event Loaded';
+
+  // ── Close the modal in the new doc ──
+  const modal=newDoc.getElementById('newEventModal');
+  if(modal)modal.classList.remove('active');
+
+  // ── Update page title ──
+  newDoc.title='GA2 Event Platform | '+eventLabel+' | A2 Systems Architecture';
+
+  // ── Remove the loadSamplePeople() call from the init block ──
+  // We do this by finding the inline script and stripping that call
+  newDoc.querySelectorAll('script:not([src])').forEach(s=>{
+    if(s.textContent.includes('loadSamplePeople')){
+      s.textContent=s.textContent.replace(/loadSamplePeople\(\);?\s*/g,'');
+    }
+  });
+
+  const output='<!DOCTYPE html>\n'+newDoc.documentElement.outerHTML;
+  const blob=new Blob([output],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  closeNewEventModal();
+}
+
+/* ── INIT ── */
 buildTables();
 loadSamplePeople();
 checkDateAlert();

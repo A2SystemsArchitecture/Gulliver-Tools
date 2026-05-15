@@ -16,7 +16,7 @@
   --amber:#92400e;--amber-bg:#fffbeb;
 }
 body{background:var(--cream);color:var(--nearblack);font-family:Arial,sans-serif;min-height:100vh;padding:0 0 60px;}
-.top-bar{background:var(--plum);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid var(--gold);position:sticky;top:0;z-index:100;}
+.top-bar{background:var(--plum);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid var(--gold);position:sticky;top:36px;z-index:100;}
 .top-bar-left{display:flex;align-items:center;gap:12px;}
 .firm-badge{background:var(--gold);color:var(--plum);font-size:12px;font-weight:700;padding:5px 12px;letter-spacing:.5px;}
 .firm-name{color:var(--white);font-size:14px;font-weight:700;}
@@ -145,6 +145,18 @@ textarea:focus{border-color:var(--plum);background:var(--lavender);}
   .new-event-btn{font-size:9px;padding:6px 10px;}
   .page{padding:20px 12px;}
 }
+
+/* ── SESSION BAR ── */
+.session-bar{background:#1a0a2e;border-bottom:2px solid var(--gold);padding:8px 32px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.session-bar-left{display:flex;align-items:center;gap:10px;}
+.session-bar-right{display:flex;align-items:center;gap:8px;}
+.session-status{color:rgba(255,255,255,.5);font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+.session-status.saved{color:#4ade80;}
+.session-btn{background:transparent;border:1px solid rgba(202,138,4,.5);color:var(--gold);padding:5px 14px;cursor:pointer;font-family:Arial,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;transition:all .2s;white-space:nowrap;}
+.session-btn:hover{background:var(--gold);color:var(--plum);}
+.session-btn.load{border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.6);}
+.session-btn.load:hover{background:rgba(255,255,255,.1);color:var(--white);}
+#sessionFileInput{display:none;}
 </style>
 </head>
 <body>
@@ -163,6 +175,17 @@ textarea:focus{border-color:var(--plum);background:var(--lavender);}
   </div>
 </div>
 
+<!-- SESSION BAR -->
+<div class="session-bar">
+  <div class="session-bar-left">
+    <span class="session-status" id="sessionStatus">No session saved</span>
+  </div>
+  <div class="session-bar-right">
+    <button class="session-btn" onclick="saveSession()">&#8595; Save Session</button>
+    <button class="session-btn load" onclick="document.getElementById('sessionFileInput').click()">&#8593; Load Session</button>
+    <input type="file" id="sessionFileInput" accept=".json" onchange="loadSession(event)"/>
+  </div>
+</div>
 <div class="top-bar">
   <div class="top-bar-left">
     <div class="firm-badge">A2</div>
@@ -648,6 +671,113 @@ function downloadNewEventFile(){
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   closeNewEventModal();
+}
+
+
+/* ══════════════════════════════════════════
+   SESSION SAVE / LOAD  (Option 2)
+   Exports all form data as a .json file.
+   Import it any time on any device/browser.
+   ══════════════════════════════════════════ */
+
+function collectSessionData(){
+  const data={version:1,savedAt:new Date().toISOString(),fields:{},checklistData:{},people:{}};
+  const fieldIds=["eventName","eventDate","eventTime","eventLocation","eventType","locationType",
+    "guestCap","rsvpCount","eventFormat","programOutcome","eventTimeline","leadershipRemarks",
+    "planningDate","briefingDate","leadershipBriefingDate","botBriefingDate","debriefDate",
+    "eventAssets","eventNotes","rsvpLink","researchLink","botResearchLink","talkingPointsLink",
+    "invitationStrategy","botAttending","botUnable","gulliverAttendees","talkingPoints"];
+  fieldIds.forEach(id=>{const el=document.getElementById(id);if(el)data.fields[id]=el.value;});
+  data.fields.constituentGroups=[...document.querySelectorAll("#constituentGroup input:checked")].map(c=>c.value);
+  ["tbl-owner","tbl-data","tbl-comms","tbl-events","tbl-budget","tbl-security"].forEach(tblId=>{
+    const rows=[];
+    document.querySelectorAll("#"+tblId+" tbody tr").forEach(tr=>{
+      const inp=tr.querySelectorAll("input,select,textarea");
+      rows.push({owner:inp[0]?inp[0].value:"",status:inp[1]?inp[1].value:"todo",date:inp[2]?inp[2].value:"",notes:inp[3]?inp[3].value:""});
+    });
+    data.checklistData[tblId]=rows;
+  });
+  ["prospectsContainer","donorsContainer","studentsContainer"].forEach(cId=>{
+    const entries=[];
+    document.querySelectorAll("#"+cId+" .person-entry").forEach(entry=>{
+      const e={};
+      const name=entry.querySelector(".p-name");const notes=entry.querySelector(".p-notes");const link=entry.querySelector(".p-link");
+      if(name)e.name=name.value;if(notes)e.notes=notes.value;if(link)e.link=link.value;
+      entries.push(e);
+    });
+    data.people[cId]=entries;
+  });
+  return data;
+}
+
+function saveSession(){
+  const data=collectSessionData();
+  const eventName=data.fields.eventName||"GA2-Session";
+  const safeName=eventName.replace(/[^a-z0-9\-_\s]/gi,"").trim().replace(/\s+/g,"-")||"GA2-Session";
+  const fileName=safeName+"-session.json";
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=fileName;
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+  const now=new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+  const status=document.getElementById("sessionStatus");
+  if(status){status.textContent="Session saved at "+now;status.className="session-status saved";}
+}
+
+function loadSession(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.version||!data.fields)throw new Error("Invalid session file");
+      Object.entries(data.fields).forEach(([id,val])=>{
+        if(id==="constituentGroups")return;
+        const el=document.getElementById(id);
+        if(el){el.value=val;if(el.tagName==="TEXTAREA"){el.style.height="auto";el.style.height=el.scrollHeight+"px";}}
+      });
+      const checked=data.fields.constituentGroups||[];
+      document.querySelectorAll("#constituentGroup input[type=checkbox]").forEach(cb=>{cb.checked=checked.includes(cb.value);});
+      Object.entries(data.checklistData||{}).forEach(([tblId,rows])=>{
+        const tbodyRows=document.querySelectorAll("#"+tblId+" tbody tr");
+        rows.forEach((row,i)=>{
+          if(!tbodyRows[i])return;
+          const inp=tbodyRows[i].querySelectorAll("input,select,textarea");
+          if(inp[0])inp[0].value=row.owner||"";
+          if(inp[1])inp[1].value=row.status||"todo";
+          if(inp[2])inp[2].value=row.date||"";
+          if(inp[3]){inp[3].value=row.notes||"";inp[3].style.height="auto";inp[3].style.height=inp[3].scrollHeight+"px";}
+        });
+      });
+      const typeMap={prospectsContainer:"prospect",donorsContainer:"donor",studentsContainer:"student"};
+      Object.entries(data.people||{}).forEach(([cId,entries])=>{
+        const container=document.getElementById(cId);
+        if(!container)return;
+        container.innerHTML="";
+        entries.forEach(entry=>{
+          addPerson(cId,typeMap[cId]);
+          const last=container.lastElementChild;
+          if(!last)return;
+          const name=last.querySelector(".p-name");const notes=last.querySelector(".p-notes");const link=last.querySelector(".p-link");
+          if(name)name.value=entry.name||"";
+          if(notes)notes.value=entry.notes||"";
+          if(link&&entry.link)link.value=entry.link||"";
+        });
+      });
+      updateDisplay();checkDateAlert();
+      const savedAt=data.savedAt?new Date(data.savedAt).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}):"unknown";
+      const status=document.getElementById("sessionStatus");
+      if(status){status.textContent="Session loaded — saved "+savedAt;status.className="session-status saved";}
+      event.target.value="";
+    }catch(err){
+      alert("Could not load session file. Please make sure you are using a valid GA2 session .json file.");
+      event.target.value="";
+    }
+  };
+  reader.readAsText(file);
 }
 
 /* ── INIT ── */

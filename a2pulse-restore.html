@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>A2 Pulse - Data Restore</title>
+<style>
+body{font-family:Arial,sans-serif;background:#2D1B4E;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;}
+.box{background:#fff;border-top:4px solid #CA8A04;padding:40px;max-width:480px;width:90%;text-align:center;}
+h2{color:#2D1B4E;font-size:18px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;}
+p{font-size:13px;color:#6b6560;line-height:1.6;margin-bottom:24px;}
+.btn{background:#CA8A04;border:none;color:#2D1B4E;padding:14px 32px;cursor:pointer;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;width:100%;margin-bottom:10px;}
+.btn:hover{background:#e6a805;}
+.status{font-size:13px;margin-top:16px;padding:12px;border-radius:4px;display:none;}
+.status.ok{background:#dcfce7;color:#166534;display:block;}
+.status.err{background:#fee2e2;color:#991b1b;display:block;}
+.status.loading{background:#fef9c3;color:#854d0e;display:block;}
+</style>
+</head>
+<body>
+<div class="box">
+  <h2>A2 Pulse&#8482; Data Restore</h2>
+  <p>This will replace the current corrupted event list in Firestore with the correct 47 events from Giselle's source file. Click the button below to restore.</p>
+  <button class="btn" id="restoreBtn" onclick="doRestore()">Restore Clean Event Data</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBt2DP9R_CfShFui5jaDIisVl6zJDk0NjI",
+  authDomain: "a2-pulse-event-command-center.firebaseapp.com",
+  projectId: "a2-pulse-event-command-center",
+  storageBucket: "a2-pulse-event-command-center.firebasestorage.app",
+  messagingSenderId: "168920225490",
+  appId: "1:168920225490:web:f29e97e6293e558a9abf0b"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const CLEAN_EVENTS = [
+  {
+    "name": "Meet Us in Aspen",
+    "date": "Jul 30, 2026",
+    "time": "6:00 p.m. -  8:00 p.m.",
+    "location": "Beekman Family Lodge 31 E. Bourg Trail Woody Creek, Colorado 81656",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "Registration Form",
+    "notes": ""
+  },
+  {
+    "name": "Grade 5 Back to School Uniform Swap",
+    "date": "Aug 17, 2026",
+    "time": "12:00 p.m. -  2:30 p.m.",
+    "location": "Marian C. Krutulis PK-8 Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "setup for Uniform swap - no food",
+    "notes": ""
+  },
+  {
+    "name": "Grade 6 - 8 / Uniform Swap",
+    "date": "Aug 18, 2026",
+    "time": "12:00 p.m. -  2:30 p.m.",
+    "location": "Marian C. Krutulis PK-8 Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "setup for Uniform swap - no food",
+    "notes": ""
+  },
+  {
+    "name": "Primary & Lower Meet & Greet / Uniform Swap",
+    "date": "Aug 19, 2026",
+    "time": "8:15-9:00 | A-G 9:30-10:15 | H-Q 10:45-11:30 | R-Z",
+    "location": "Marian C. Krutulis PK-8 Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "setup for Uniform swap - no food",
+    "notes": ""
+  },
+  {
+    "name": "Back to School Night - Primary",
+    "date": "Aug 26, 2026",
+    "time": "5:30 p.m. \u2013  7:00pm",
+    "location": "Marian C. Krutulis PK-8 Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Back to School Night - 5th and 6th",
+    "date": "Aug 27, 2026",
+    "time": "5:30 p.m. \u2013  7:00pm",
+    "location": "Marian C. Krutulis PK-8 Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Mocha & Mingle Coffee for all Parents (sponsored by PA)",
+    "date": "Aug 28, 2026",
+    "time": "8:30 a.m. -  9:15 a.m.",
+    "location": "Marian C. Krutulis PK-8 Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "Ask Gina RE: Activities/Catering Coffee Cart",
+    "notes": ""
+  },
+  {
+    "name": "STEM Building Groundbreaking Ceremony",
+    "date": "Aug 31, 2026",
+    "time": "8:00 a.m. -  11:30 a.m.",
+    "location": "Upper School Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "Catering?",
+    "notes": ""
+  },
+  {
+    "name": "Back to School Night - Lower School",
+    "date": "Wednesday, Sept 2",
+    "time": "TBD",
+    "location": "Marian C. Krutulis PK-8 Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Back to School Night - 7th and 8th",
+    "date": "Thursday, Sept 3",
+    "time": "TBD",
+    "location": "Marian C. Krutulis PK-8 Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Back to School Night - 9th and 12th",
+    "date": "Tuesday, Sept 8",
+    "time": "TBD",
+    "location": "Upper School Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Development New Family Breakfast #1 - Primary/Lower",
+    "date": "Tuesday, Sept 8",
+    "time": "8:30 a.m. -  10:00 a.m.",
+    "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Development New Family Breakfast #2",
+    "date": "Friday, Sept 14",
+    "time": "8:30 a.m. -  10:00 a.m.",
+    "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "1st All-School (PA) Meeting",
+    "date": "Thursday, Sept 17",
+    "time": "8:30 a.m. -  10:00 a.m.",
+    "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "just ALOT coffee/tea",
+    "notes": ""
+  },
+  {
+    "name": "Development New Family Breakfast #3",
+    "date": "Wednesday, Sept 22",
+    "time": "8:30 a.m. -  10:00 a.m.",
+    "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "New Brazilian Families Dinner",
+    "date": "Wednesday, Sept 23",
+    "time": "6:30 p.m. -  8:30 p.m.",
+    "location": "The Rhein Schirato Family Residence 4131 S Douglas Road Miami, FL 33133",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "Brazilian Families Dinner",
+    "notes": ""
+  },
+  {
+    "name": "Centennial Speaker Series #1",
+    "date": "Oct 7, 2026",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "All School Parent Social",
+    "date": "Oct 10, 2026",
+    "time": "7:00 p.m. -  11:00 p.m.",
+    "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013  Havenick Family Commons and Courtyard",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "RSVP link",
+    "notes": ""
+  },
+  {
+    "name": "Athletic Hall of Fame &  Distinguished Alumni & Faculty Awards",
+    "date": "Oct 15, 2026",
+    "time": "6:00 p.m. -  9:00 p.m.",
+    "location": "Upper School",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Homecoming BBQ & Tailgate",
+    "date": "Oct 16, 2026",
+    "time": "3:30 p.m. -  7:00 p.m.",
+    "location": "Upper School  Sean Taylor '01 Memorial Field",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "HOCO Registration Link",
+    "notes": ""
+  },
+  {
+    "name": "Class of 2021 \u2013 5th Reunion",
+    "date": "Oct 16, 2026",
+    "time": "3:30 p.m. -  7:00 p.m.",
+    "location": "Upper School  Sean Taylor '01 Memorial Field",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "Class of 2021",
+    "notes": ""
+  },
+  {
+    "name": "Class of 2016 \u2013 10th Reunion",
+    "date": "Oct 16, 2026",
+    "time": "3:30 p.m. -  7:00 p.m.",
+    "location": "Upper School  Sean Taylor '01 Memorial Field",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "Class of 2016",
+    "notes": ""
+  },
+  {
+    "name": "Class of 2006 \u2013 20th Reunion",
+    "date": "Oct 16, 2026",
+    "time": "3:30 p.m. -  7:00 p.m.",
+    "location": "Upper School  Sean Taylor '01 Memorial Field",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "Class of 2006",
+    "notes": ""
+  },
+  {
+    "name": "Class of 1996 \u2013 30th Reunion",
+    "date": "Oct 16, 2026",
+    "time": "3:30 p.m. -  7:00 p.m.",
+    "location": "Upper School  Sean Taylor '01 Memorial Field",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "Class of 1996",
+    "notes": ""
+  },
+  {
+    "name": "Classes of 1990, 1991 & 1992 \u2013 35th Reunion",
+    "date": "Oct 16, 2026",
+    "time": "3:30 p.m. -  7:00 p.m.",
+    "location": "Upper School  Sean Taylor '01 Memorial Field",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "Class of 1991",
+    "notes": ""
+  },
+  {
+    "name": "Class of 1986 \u2013 40th Reunion",
+    "date": "Oct 16, 2026",
+    "time": "3:30 p.m. -  7:00 p.m.",
+    "location": "Upper School  Sean Taylor '01 Memorial Field",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "Class of 1986",
+    "notes": ""
+  },
+  {
+    "name": "HOLD for Krys Event",
+    "date": "Oct 20, 2026",
+    "time": "TBD",
+    "location": "or October 21",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Giving Circles Reception",
+    "date": "Nov 11, 2026",
+    "time": "6:30 p.m. -  8:30 p.m.",
+    "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Gulliver Marketplace",
+    "date": "Nov 14, 2026",
+    "time": "10:00 a.m. -  3:00 p.m.",
+    "location": "Upper School Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "Yes",
+    "catering": "No",
+    "link": "Gulliver Marketplace",
+    "notes": ""
+  },
+  {
+    "name": "Art Walk, Marketplace, and Arts Building Groundbreaking",
+    "date": "Nov 14, 2026",
+    "time": "10:00 a.m. -  3:00 p.m.",
+    "location": "Upper School Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "Yes",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Mocha & Mingle Coffee for all Parents (sponsored by PA)",
+    "date": "Nov 19, 2026",
+    "time": "8:30 a.m. -  9:15 a.m.",
+    "location": "Marian C. Krutulis PK-8 Campus",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "Ask Gina RE: Activities/Catering Coffee Cart",
+    "notes": ""
+  },
+  {
+    "name": "Give Miami Day",
+    "date": "Nov 19, 2026",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Centennial Speaker Series #2",
+    "date": "Jan 13, 2027",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Collegiate Club Launch (TBC)",
+    "date": "Jan 20, 2027",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Movie Night",
+    "date": "Jan 23, 2027",
+    "time": "TBD",
+    "location": "Upper School Sean Taylor '01 Memorial Field",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "All-School (PA) Meeting IF NEEDED",
+    "date": "Jan 26, 2027",
+    "time": "8:30 a.m. -  10:00 a.m.",
+    "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "just ALOT coffee/tea",
+    "notes": ""
+  },
+  {
+    "name": "1926 Society & Leadership Dinner",
+    "date": "Jan 27, 2027",
+    "time": "6:30 p.m. -  8:30 p.m.",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "DO WE ADD TO TOM AND FRANK'S CALENDAR?",
+    "notes": ""
+  },
+  {
+    "name": "Golf Classic",
+    "date": "Feb 8, 2027",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Gulliver Gala",
+    "date": "Mar 13, 2027",
+    "time": "6:30 p.m. -  1:00 a.m.",
+    "location": "Upper School Campus Gym",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Centennial Speaker Series #3",
+    "date": "Apr 7, 2027",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Volunteer Appreciation Breakfast",
+    "date": "Apr 23, 2027",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Fishing Tournament (TBC)",
+    "date": "May 1, 2027",
+    "time": "2:00 p.m. -  5:00 p.m.",
+    "location": "Key Biscayne Yacht Club 180 Harbor Dr Key Biscayne, FL 33149",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Faculty/Staff Appreciation Week",
+    "date": "May 3 - 7",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Senior Sunset (with Pinning?)",
+    "date": "May 6, 2027",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Newly Enrolled Parent Reception",
+    "date": "May 11, 2027",
+    "time": "5:45 p.m. -  8:00 p.m.",
+    "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2014  Sam and Emina Nazarian Gymnasium",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "Final All-School PA Meeting",
+    "date": "May 11, 2027",
+    "time": "6:00 p.m. - 8:00 p.m.",
+    "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2014  Sam and Emina Nazarian Gymnasium",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  },
+  {
+    "name": "LAST DAY OF SCHOOL",
+    "date": "May 28, 2027",
+    "time": "TBD",
+    "location": "TBD",
+    "type": [],
+    "status": "Not Started",
+    "regReq": "No",
+    "catering": "No",
+    "link": "",
+    "notes": ""
+  }
+];
+
+window.doRestore = async function() {
+  const btn = document.getElementById('restoreBtn');
+  const status = document.getElementById('status');
+  btn.disabled = true;
+  status.className = 'status loading';
+  status.textContent = 'Authenticating...';
+
+  try {
+    await signInWithEmailAndPassword(auth, 'adrian.antonini.leadership@gmail.com', prompt('Enter your Firebase password:'));
+    status.textContent = 'Authenticated. Writing clean data to Firestore...';
+    
+    await setDoc(doc(db, 'gulliver-events', 'data'), {
+      events: CLEAN_EVENTS,
+      deadlines: [],
+      vendors: [],
+      sponsors: [],
+      readiness: {},
+      checklist: {},
+      prefs: {},
+      lastUpdated: new Date().toISOString()
+    });
+    
+    status.className = 'status ok';
+    status.textContent = 'SUCCESS — ' + CLEAN_EVENTS.length + ' clean events restored to Firestore. You can now close this page and reload the Command Center.';
+    btn.textContent = 'Done';
+  } catch(err) {
+    status.className = 'status err';
+    status.textContent = 'Error: ' + err.message;
+    btn.disabled = false;
+  }
+};
+</script>
+</body>
+</html>

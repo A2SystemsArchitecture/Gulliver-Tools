@@ -6,11 +6,11 @@
 <style>
 body{font-family:Arial,sans-serif;background:#2D1B4E;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;}
 .box{background:#fff;border-top:4px solid #CA8A04;padding:40px;max-width:480px;width:90%;text-align:center;}
-h2{color:#2D1B4E;font-size:18px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;}
-p{font-size:13px;color:#6b6560;line-height:1.6;margin-bottom:24px;}
-.btn{background:#CA8A04;border:none;color:#2D1B4E;padding:14px 32px;cursor:pointer;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;width:100%;margin-bottom:10px;}
+h2{color:#2D1B4E;font-size:18px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;font-family:Arial,sans-serif;}
+p{font-size:13px;color:#6b6560;line-height:1.6;margin-bottom:24px;font-family:Arial,sans-serif;}
+.btn{background:#CA8A04;border:none;color:#2D1B4E;padding:14px 32px;cursor:pointer;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;width:100%;margin-bottom:10px;font-family:Arial,sans-serif;}
 .btn:hover{background:#e6a805;}
-.status{font-size:13px;margin-top:16px;padding:12px;border-radius:4px;display:none;}
+.status{font-size:13px;margin-top:16px;padding:12px;display:none;font-family:Arial,sans-serif;}
 .status.ok{background:#dcfce7;color:#166534;display:block;}
 .status.err{background:#fee2e2;color:#991b1b;display:block;}
 .status.loading{background:#fef9c3;color:#854d0e;display:block;}
@@ -19,15 +19,14 @@ p{font-size:13px;color:#6b6560;line-height:1.6;margin-bottom:24px;}
 <body>
 <div class="box">
   <h2>A2 Pulse&#8482; Data Restore</h2>
-  <p>This will replace the current corrupted event list in Firestore with the correct 47 events from Giselle's source file. Click the button below to restore.</p>
+  <p>This will replace the corrupted event list with the correct 47 events with properly formatted dates. Click Restore to proceed.</p>
   <button class="btn" id="restoreBtn" onclick="doRestore()">Restore Clean Event Data</button>
   <div class="status" id="status"></div>
 </div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBt2DP9R_CfShFui5jaDIisVl6zJDk0NjI",
@@ -141,7 +140,7 @@ const CLEAN_EVENTS = [
   },
   {
     "name": "Back to School Night - Lower School",
-    "date": "Wednesday, Sept 2",
+    "date": "Sept 2, 2026",
     "time": "TBD",
     "location": "Marian C. Krutulis PK-8 Campus",
     "type": [],
@@ -153,7 +152,7 @@ const CLEAN_EVENTS = [
   },
   {
     "name": "Back to School Night - 7th and 8th",
-    "date": "Thursday, Sept 3",
+    "date": "Sept 3, 2026",
     "time": "TBD",
     "location": "Marian C. Krutulis PK-8 Campus",
     "type": [],
@@ -165,7 +164,7 @@ const CLEAN_EVENTS = [
   },
   {
     "name": "Back to School Night - 9th and 12th",
-    "date": "Tuesday, Sept 8",
+    "date": "Sept 8, 2026",
     "time": "TBD",
     "location": "Upper School Campus",
     "type": [],
@@ -177,7 +176,7 @@ const CLEAN_EVENTS = [
   },
   {
     "name": "Development New Family Breakfast #1 - Primary/Lower",
-    "date": "Tuesday, Sept 8",
+    "date": "Sept 8, 2026",
     "time": "8:30 a.m. -  10:00 a.m.",
     "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
     "type": [],
@@ -189,7 +188,7 @@ const CLEAN_EVENTS = [
   },
   {
     "name": "Development New Family Breakfast #2",
-    "date": "Friday, Sept 14",
+    "date": "Sept 14, 2026",
     "time": "8:30 a.m. -  10:00 a.m.",
     "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
     "type": [],
@@ -201,7 +200,7 @@ const CLEAN_EVENTS = [
   },
   {
     "name": "1st All-School (PA) Meeting",
-    "date": "Thursday, Sept 17",
+    "date": "Sept 17, 2026",
     "time": "8:30 a.m. -  10:00 a.m.",
     "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
     "type": [],
@@ -213,7 +212,7 @@ const CLEAN_EVENTS = [
   },
   {
     "name": "Development New Family Breakfast #3",
-    "date": "Wednesday, Sept 22",
+    "date": "Sept 22, 2026",
     "time": "8:30 a.m. -  10:00 a.m.",
     "location": "Marian C. Krutulis PK-8 Campus Center for Student Life \u2013 Havenick Family Commons",
     "type": [],
@@ -225,7 +224,7 @@ const CLEAN_EVENTS = [
   },
   {
     "name": "New Brazilian Families Dinner",
-    "date": "Wednesday, Sept 23",
+    "date": "Sept 23, 2026",
     "time": "6:30 p.m. -  8:30 p.m.",
     "location": "The Rhein Schirato Family Residence 4131 S Douglas Road Miami, FL 33133",
     "type": [],
@@ -549,7 +548,7 @@ const CLEAN_EVENTS = [
   },
   {
     "name": "Faculty/Staff Appreciation Week",
-    "date": "May 3 - 7",
+    "date": "May 3, 2027",
     "time": "TBD",
     "location": "TBD",
     "type": [],
@@ -615,11 +614,11 @@ window.doRestore = async function() {
   btn.disabled = true;
   status.className = 'status loading';
   status.textContent = 'Authenticating...';
-
   try {
-    await signInWithEmailAndPassword(auth, 'adrian.antonini.leadership@gmail.com', prompt('Enter your Firebase password:'));
-    status.textContent = 'Authenticated. Writing clean data to Firestore...';
-    
+    const pw = prompt('Enter your Firebase password:');
+    if(!pw){ btn.disabled=false; status.style.display='none'; return; }
+    await signInWithEmailAndPassword(auth, 'adrian.antonini.leadership@gmail.com', pw);
+    status.textContent = 'Writing clean data to Firestore...';
     await setDoc(doc(db, 'gulliver-events', 'data'), {
       events: CLEAN_EVENTS,
       deadlines: [],
@@ -630,9 +629,8 @@ window.doRestore = async function() {
       prefs: {},
       lastUpdated: new Date().toISOString()
     });
-    
     status.className = 'status ok';
-    status.textContent = 'SUCCESS — ' + CLEAN_EVENTS.length + ' clean events restored to Firestore. You can now close this page and reload the Command Center.';
+    status.textContent = 'SUCCESS — ' + CLEAN_EVENTS.length + ' clean events restored with correct dates. Close this page and reload the Command Center.';
     btn.textContent = 'Done';
   } catch(err) {
     status.className = 'status err';
